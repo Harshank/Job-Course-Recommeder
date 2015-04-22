@@ -17,8 +17,6 @@ public class LinkedinService {
     private LinkedIn linkedIn;
     private LinkedInProfile linkedInProfile;
     private LinkedInProfileFull linkedInProfileFull;
-    @Inject
-    private ConnectionRepository connectionRepository;
     public LinkedIn getLinkedIn() {
         return linkedIn;
     }
