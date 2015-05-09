@@ -1,12 +1,18 @@
 package linkedincoursera.services;
 
+import linkedincoursera.model.QuesSof;
+import linkedincoursera.model.QuestionCountSOF;
+import org.springframework.http.*;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.linkedin.api.*;
 import org.springframework.social.linkedin.api.impl.LinkedInTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,6 +23,7 @@ public class LinkedinService {
     private LinkedIn linkedIn;
     private LinkedInProfile linkedInProfile;
     private LinkedInProfileFull linkedInProfileFull;
+    RestTemplate restTemplate = new RestTemplate();
     public LinkedIn getLinkedIn() {
         return linkedIn;
     }
@@ -37,6 +44,20 @@ public class LinkedinService {
     }
     public List<Education> getEducations() {
         return linkedInProfileFull.getEducations();
+    }
+    public void getCompanyJobs(String accessToken) throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//        headers.add("Authorization: Bearer ", accessToken);
+        headers.set("Authorization: Bearer ", accessToken);
+        HttpEntity<String> stringHttpEntity = new HttpEntity<String>(headers);
+        try{
+            ResponseEntity<Boolean> response = restTemplate.exchange("https://api.linkedin.com/v1/companies/162479/is-company-share-enabled?format=json", HttpMethod.GET, stringHttpEntity, Boolean.class);
+            Boolean t = response.getBody();
+            System.out.println(t);
+        }catch(HttpClientErrorException e){
+            throw new Exception(e);
+        }
 
     }
 }

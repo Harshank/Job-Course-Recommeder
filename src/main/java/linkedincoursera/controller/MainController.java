@@ -5,11 +5,18 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import com.google.code.stackexchange.client.StackExchangeApiClient;
+import com.google.code.stackexchange.client.StackExchangeApiClientFactory;
+import com.google.code.stackexchange.client.query.QuestionApiQuery;
+import com.google.code.stackexchange.client.query.StackExchangeApiQueryFactory;
 import linkedincoursera.model.Course;
 import linkedincoursera.model.Elements;
+import linkedincoursera.model.QuesSof;
+import linkedincoursera.model.QuestionCountSOF;
 import linkedincoursera.services.AuthorizationService;
 import linkedincoursera.services.CourseraService;
 import linkedincoursera.services.LinkedinService;
+import linkedincoursera.services.StackoverflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -40,6 +47,8 @@ public class MainController {
     LinkedinService linkedinService;
     @Autowired
     CourseraService courseraService;
+    @Autowired
+    public StackoverflowService stackoverflowService;
 
     @RequestMapping("/")
     public String index() {
@@ -61,17 +70,19 @@ public class MainController {
             List<String> skillSet = linkedinService.getSkillSet();
             List <Education> educationsList = linkedinService.getEducations();
             List<Course> courses = courseraService.fetchCourses("java");
-            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
             if(basicProf!=null)
                 model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
             else model.addAttribute("userName","Anonymous");
             model.addAttribute("education", educationsList);
-            model.addAttribute("skills",skillSet);
+            model.addAttribute("skills", skillSet);
             model.addAttribute("courses", courses);
+//            linkedinService.getCompanyJobs(access_token);
+            stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+//            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
 //            System.out.println("***************EDUCATION*******************");
 //            educationsList.forEach(education -> System.out.println(education.getDegree() + " " + education.getFieldOfStudy() + " " + education.getSchoolName()));
-//            System.out.println("***************SKILLS*******************");
+//`            System.out.println("***************SKILLS*******************");
 //            System.out.println(skillSet);
 //            System.out.println("***************COURSES*******************");
         } catch (Exception e) {

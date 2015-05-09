@@ -28,6 +28,7 @@ compile("org.springframework.social:spring-social-linkedin")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.0'
 //	compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile fileTree(dir: 'lib', include: 'stackexchange-java-sdk.jar')
     compile 'mysql:mysql-connector-java:5.1.9'
     compile 'org.apache.commons:commons-dbcp2:2.0'
     compile 'commons-logging:commons-logging:1.1.3'
