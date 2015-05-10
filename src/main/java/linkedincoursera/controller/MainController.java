@@ -9,10 +9,8 @@ import com.google.code.stackexchange.client.StackExchangeApiClient;
 import com.google.code.stackexchange.client.StackExchangeApiClientFactory;
 import com.google.code.stackexchange.client.query.QuestionApiQuery;
 import com.google.code.stackexchange.client.query.StackExchangeApiQueryFactory;
-import linkedincoursera.model.Course;
-import linkedincoursera.model.Elements;
-import linkedincoursera.model.QuesSof;
-import linkedincoursera.model.QuestionCountSOF;
+import linkedincoursera.model.*;
+import linkedincoursera.repository.CourseraRepo;
 import linkedincoursera.services.AuthorizationService;
 import linkedincoursera.services.CourseraService;
 import linkedincoursera.services.LinkedinService;
@@ -49,7 +47,8 @@ public class MainController {
     CourseraService courseraService;
     @Autowired
     public StackoverflowService stackoverflowService;
-
+    @Autowired
+    public CourseraRepo courseraRepo;
     @RequestMapping("/")
     public String index() {
     	String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_fullprofile";
@@ -69,7 +68,12 @@ public class MainController {
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
             List<String> skillSet = linkedinService.getSkillSet();
             List <Education> educationsList = linkedinService.getEducations();
-            List<Course> courses = courseraService.fetchCourses("java");
+            List<Course> courses = courseraService.fetchCourses();
+            List<Categories> categoryList = courseraService.getCategoriesList();
+            courseraRepo.addCourses(courses);
+            courseraRepo.addCategories(categoryList);
+            System.out.println(courses.get(0).getLinks().getCategories());
+            courseraService.filterCourses("java");
             if(basicProf!=null)
                 model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
             else model.addAttribute("userName","Anonymous");
@@ -77,7 +81,7 @@ public class MainController {
             model.addAttribute("skills", skillSet);
             model.addAttribute("courses", courses);
 //            linkedinService.getCompanyJobs(access_token);
-            stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+//            stackoverflowService.fetchMostAskedQuestionsStackoverflow();
 //            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
 //            System.out.println("***************EDUCATION*******************");
