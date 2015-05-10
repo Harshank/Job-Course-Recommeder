@@ -12,6 +12,7 @@ import com.google.code.stackexchange.client.query.QuestionApiQuery;
 import com.google.code.stackexchange.client.query.StackExchangeApiQueryFactory;
 import linkedincoursera.model.*;
 import linkedincoursera.repository.CourseraRepo;
+import linkedincoursera.repository.StackOverflowRepo;
 import linkedincoursera.services.AuthorizationService;
 import linkedincoursera.services.CourseraService;
 import linkedincoursera.services.LinkedinService;
@@ -23,6 +24,7 @@ import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,6 +33,7 @@ import java.util.List;
 @Controller
 @PropertySource(value = {"classpath:/properties/application.properties"},ignoreResourceNotFound = false)
 public class MainController {
+    static boolean toBeInserted= true;
     @Value("${api.key}")
     private String apikey;
     @Value("${api.secret}")
@@ -67,8 +70,6 @@ public class MainController {
             List <Education> educationsList = linkedinService.getEducations();
             List<Course> courses = courseraService.fetchCourses();
             List<Categories> categoryList = courseraService.getCategoriesList();
-            courseraRepo.addCourses(courses);
-            courseraRepo.addCategories(categoryList);
             System.out.println(courses.get(0).getLinks().getCategories());
             courseraService.filterCourses("java");
             if(basicProf!=null)
@@ -78,7 +79,15 @@ public class MainController {
             model.addAttribute("skills", skillSet);
             model.addAttribute("courses", courses);
 //            linkedinService.getCompanyJobs(access_token);
-//            stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+            List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+            if(toBeInserted) {
+                courseraRepo.addCourses(courses);
+                courseraRepo.addCategories(categoryList);
+                StackOverflowRepo.addQuestionsCount(qtnCountSof);
+                toBeInserted = false;
+            }
+            System.out.println(qtnCountSof);
+
 //            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
 //            System.out.println("***************EDUCATION*******************");

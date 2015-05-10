@@ -1,5 +1,9 @@
 package linkedincoursera.services;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import linkedincoursera.model.QuesSof;
+import linkedincoursera.model.QuestionCountSOF;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -11,13 +15,16 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harsh on 4/24/15.
  */
 @Component
 public class StackoverflowService {
-    public void fetchMostAskedQuestionsStackoverflow() throws Exception{
+    QuesSof sof = new QuesSof();
+    public List<QuestionCountSOF> fetchMostAskedQuestionsStackoverflow() throws Exception{
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet("https://api.stackexchange.com/2.2/tags?order=desc&sort=popular&site=stackoverflow");
         HttpResponse response = httpClient.execute(httpGet);
@@ -33,11 +40,14 @@ public class StackoverflowService {
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject)parser.parse(result.toString());
             JSONArray items = (JSONArray)obj.get("items");
+            ArrayList<QuestionCountSOF> listQtns = new Gson().fromJson(items.toString(), new TypeToken<List<QuestionCountSOF>>(){}.getType());
+            sof.setItems(listQtns);
             for(Object item : items) {
                 JSONObject itemObj = (JSONObject)item;
-                System.out.println(itemObj.get("name") + ": " + itemObj.get("count"));
+//                System.out.println(itemObj.get("name") + ": " + itemObj.get("count"));
             }
         } finally {
+            return sof.getItems();
         }
     }
 }
