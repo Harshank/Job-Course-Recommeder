@@ -1,18 +1,7 @@
 package linkedincoursera.controller;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.List;
-
-import com.google.code.stackexchange.client.StackExchangeApiClient;
-import com.google.code.stackexchange.client.StackExchangeApiClientFactory;
-import com.google.code.stackexchange.client.query.QuestionApiQuery;
-import com.google.code.stackexchange.client.query.StackExchangeApiQueryFactory;
 import linkedincoursera.model.Course;
-import linkedincoursera.model.Elements;
-import linkedincoursera.model.QuesSof;
-import linkedincoursera.model.QuestionCountSOF;
 import linkedincoursera.services.AuthorizationService;
 import linkedincoursera.services.CourseraService;
 import linkedincoursera.services.LinkedinService;
@@ -20,18 +9,14 @@ import linkedincoursera.services.StackoverflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.social.linkedin.api.*;
-import org.springframework.social.linkedin.api.impl.LinkedInTemplate;
+import org.springframework.social.linkedin.api.Education;
+import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Controller
 @PropertySource(value = {"classpath:/properties/application.properties"},ignoreResourceNotFound = false)
