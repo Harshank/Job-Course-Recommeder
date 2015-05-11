@@ -2,6 +2,11 @@ package linkedincoursera.services;
 
 import linkedincoursera.model.QuesSof;
 import linkedincoursera.model.QuestionCountSOF;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.http.*;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
@@ -48,7 +53,6 @@ public class LinkedinService {
     public void getCompanyJobs(String accessToken) throws Exception{
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//        headers.add("Authorization: Bearer ", accessToken);
         headers.set("Authorization: Bearer ", accessToken);
         HttpEntity<String> stringHttpEntity = new HttpEntity<String>(headers);
         try{
@@ -59,5 +63,20 @@ public class LinkedinService {
             throw new Exception(e);
         }
 
+    }
+    public String getProfilePic(String accessToken) throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization", " Bearer "+accessToken);
+        System.out.println(headers);
+        HttpEntity<String> stringHttpEntity = new HttpEntity<String>(headers);
+        try{
+            ResponseEntity<String> response = restTemplate.exchange("http://api.linkedin.com/v1/people/~/picture-urls::(original)", HttpMethod.GET, stringHttpEntity, String.class);
+            String t = response.getBody();
+            System.out.println(t);
+            return t;
+        }catch(HttpClientErrorException e){
+            throw new Exception(e);
+        }
     }
 }

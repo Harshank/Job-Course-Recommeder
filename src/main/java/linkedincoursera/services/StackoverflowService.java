@@ -41,6 +41,9 @@ public class StackoverflowService {
             JSONObject obj = (JSONObject)parser.parse(result.toString());
             JSONArray items = (JSONArray)obj.get("items");
             ArrayList<QuestionCountSOF> listQtns = new Gson().fromJson(items.toString(), new TypeToken<List<QuestionCountSOF>>(){}.getType());
+            for(int i =0;i<listQtns.size();i++) {
+                listQtns.get(i).setId(i);
+            }
             sof.setItems(listQtns);
             for(Object item : items) {
                 JSONObject itemObj = (JSONObject)item;

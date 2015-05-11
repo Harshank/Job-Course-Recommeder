@@ -75,7 +75,6 @@ public class AuthorizationService {
             e.printStackTrace();
         }
         access_token = response.substring(17,response.length()-23);
-        System.out.println("Response is : " + response);
         System.out.println("Access_Token : " + access_token);
         return access_token;
     }

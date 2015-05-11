@@ -8,17 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by harsh on 4/25/15.
  */
 public class QuestionCountSOF {
-    public static AtomicInteger seq = new AtomicInteger(1);
+//    static AtomicInteger seq = new AtomicInteger(1);
     private int id;
     private int count;
     private String name;
     private boolean has_synonyms;
     private boolean is_moderator_only;
     private boolean is_required;
-    QuestionCountSOF() {
-        super();
-        this.id = seq.incrementAndGet();
-    }
+//    QuestionCountSOF() {
+//        super();
+//        this.id = seq.incrementAndGet();
+//    }
     public String getName() {
         return name;
     }
