@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -34,6 +35,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/kendo.all.min.js"></script>
+    <script type="text/javascript" src="../js/my.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -52,23 +54,37 @@
             </ul>
             <ul class="nav navbar-nav pull-right">
                 <li class="active"><a class="btn" href="/jobs">Jobs</a></li>
+                <li class="active"><a class="btn" href="/recommendation">Recommendation</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
+
 <div style="margin-top: 6%;">
     <img th:src="${profilePhotoUrl}" style="width: 8%;"/>
     <p th:text="${userName}" />
+
+<div style="margin-top: 8%;">
+    <p th:text="${userName}" />
+    <h2>Skills</h2>
     <label>Skill: </label>
     <input id="skillName" />
     <span>
         <button id="submitSkill" class="k-primary">Go</button>
     </span>
 </div>
+</div>
 </body>
 <script th:inline="javascript">
     var skills = [[${skills}]];
     console.log(skills);
+    <div id ="courseDiv">
+
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    var skill = [[${skills}]];
     $(document).ready(function() {
         $("#submitSkill").kendoButton();
         $("#skillName").kendoDropDownList({
