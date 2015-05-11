@@ -1,7 +1,5 @@
 package linkedincoursera.model.coursera;
 
-import linkedincoursera.model.coursera.Category;
-
 /**
  * Created by harsh on 4/18/15.
  */
@@ -11,7 +9,7 @@ public class Course {
     private String shortName;
     private String name;
     private String language;
-    private Category links;
+    private Links links;
     private String photo;
     private String shortDescription;
     private String instructor;
@@ -49,11 +47,11 @@ public class Course {
         this.language = language;
     }
 
-    public Category getLinks() {
+    public Links getLinks() {
         return links;
     }
 
-    public void setLinks(Category links) {
+    public void setLinks(Links links) {
         this.links = links;
     }
 

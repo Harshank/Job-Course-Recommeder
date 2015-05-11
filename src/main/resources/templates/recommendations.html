@@ -61,17 +61,17 @@
 </div>
 
 
-    <div style="margin-top: 8%;">
-        <p th:text="${userName}" />
-        <h2>Skills</h2>
-        <label>Skill: </label>
-        <input id="skillName" />
+<div style="margin-top: 8%;">
+    <p th:text="${userName}" />
+    <h2>Skills</h2>
+    <label>Skill: </label>
+    <input id="skillName" />
     <span>
         <button id="submitSkill" class="k-primary">Go</button>
     </span>
-    </div>
 </div>
 </body>
+<body>
 <script th:inline="javascript">
     var skills = [[${skills}]];
     console.log(skills);
@@ -79,7 +79,6 @@
 
     </div>
 </script>
-</div>
 <div id ="courseDiv">
 
 </div>

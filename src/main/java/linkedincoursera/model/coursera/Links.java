@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class Links {
     private List<Integer> categories;
+    private List<Integer> sessions;
 
     public List<Integer> getCategories() {
         return categories;
@@ -14,5 +15,13 @@ public class Links {
 
     public void setCategories(List<Integer> categories) {
         this.categories = categories;
+    }
+
+    public List<Integer> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Integer> sessions) {
+        this.sessions = sessions;
     }
 }
