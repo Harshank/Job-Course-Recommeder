@@ -3,10 +3,13 @@
  */
 function fetchCourses(skill) {
     var course=[];
+    console.log('GO');
     $.ajax({
-        url: "/recommendations",
+        url: "/recommendations/"+skill,
         success: function (response) {
             course = response;
+            console.log(response);
+            $("#courseDiv").html(course);
         },
         error: function () {
             // Stop displaying loading indicator
@@ -14,5 +17,4 @@ function fetchCourses(skill) {
             console.error("uh oh!");
         }
     });
-    return course;
 }
