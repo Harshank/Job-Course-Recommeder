@@ -60,6 +60,7 @@ public class MainController {
         try {
             linkedinService.setApi(access_token);
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
             List<String> skillSet = linkedinService.getSkillSet();
             List <Education> educationsList = linkedinService.getEducations();
             List<Course> courses = courseraService.fetchCourses();
@@ -84,18 +85,18 @@ public class MainController {
             if(basicProf!=null)
                 model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
             else model.addAttribute("userName","Anonymous");
+            model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
             model.addAttribute("skills", skillSet);
             model.addAttribute("courses", courses);
 //            linkedinService.getCompanyJobs(access_token);
             List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
             if(toBeInserted) {
-                courseraRepo.addCourses(courses);
-                courseraRepo.addCategories(categoryList);
-                StackOverflowRepo.addQuestionsCount(qtnCountSof);
+//                courseraRepo.addCourses(courses);
+//                courseraRepo.addCategories(categoryList);
+//                StackOverflowRepo.addQuestionsCount(qtnCountSof);
                 toBeInserted = false;
             }
-            System.out.println(qtnCountSof);
 
 //            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
