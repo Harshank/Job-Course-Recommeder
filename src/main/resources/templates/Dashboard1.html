@@ -45,155 +45,27 @@
 <ul class="nav nav-pills">
     <li role="presentation" class="active"><a href="#top">Home</a></li>
     <li role="presentation"><a href="/profile">Profile</a></li>
-    <li role="presentation"><a href="#jobs">Jobs</a></li>
-    <li role="presentation"><a href="#courses">Courses</a></li>
+    <li role="presentation"><a href="/jobs">Jobs</a></li>
+    <li role="presentation"><a href="/courses">Courses</a></li>
 </ul>
 
 <!-- Header -->
 <section id="top" class="header">
     <div class="text-vertical-center">
-        <h2>Welcome</h2>
-        <h1 th:text="${userName}"></h1>
-        <br>
-        <a href="#profile" class="btn btn-dark btn-lg">Profile</a>
-        <a href="#jobs" class="btn btn-dark btn-lg">Jobs</a>
-        <a href="#courses" class="btn btn-dark btn-lg">Recommend Courses</a>
 
-    </div>
-</section>
+     <div class="col-lg-12 text-center">
+        <div class="item mb centered">
+            <p><img class="img-circle" th:src="${profile}" width="150"></p>
+            <h3>Name : </h3> <h2 th:text=${userName}>"</h2>
+            <h3>Headline:</h3> <p th:text="${headline}"></p>
+            <h3>Summary :</h3> <p th:text="${summary}"></p>
+            <h3>Skills :</h3><p th:text="${skills}"></p>
+            <h3>Education : </h3> <p th:text="${education}"></p>
 
-
-<!-- About -->
-<section id="profile" class="profile">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="item mb centered">
-                    <h3>Name : </h3> <p th:text=${userName}>"</p>
-                    <h3>Headline:</h3> <p th:text="${headline}"></p>
-                    <h3>Summary :</h3> <p th:text="${summary}"></p>
-                    <h3>Skills :</h3><p th:text="${skills}"></p>
-                    <h3>Education : </h3> <p th:text="${education}"></p>
-                    <p><img class="img-circle" th:src="${profile}" width="150"></p>
-
-                </div>
-
-            </div>
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container -->
-</section>
-
-<!-- Services -->
-<!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
-<section id="jobs" class="services bg-primary">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-lg-10 col-lg-offset-1">
-                <h2>Our Services</h2>
-                <hr class="small">
-                <div class="row">
-                    <div class="col-md-3 col-sm-6">
-                        <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-cloud fa-stack-1x text-primary"></i>
-                            </span>
-                            <h4>
-                                <strong>Service Name</strong>
-                            </h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <a href="#" class="btn btn-light">Learn More</a>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-compass fa-stack-1x text-primary"></i>
-                            </span>
-                            <h4>
-                                <strong>Service Name</strong>
-                            </h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <a href="#" class="btn btn-light">Learn More</a>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-flask fa-stack-1x text-primary"></i>
-                            </span>
-                            <h4>
-                                <strong>Service Name</strong>
-                            </h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <a href="#" class="btn btn-light">Learn More</a>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-shield fa-stack-1x text-primary"></i>
-                            </span>
-                            <h4>
-                                <strong>Service Name</strong>
-                            </h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <a href="#" class="btn btn-light">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row (nested) -->
-            </div>
-            <!-- /.col-lg-10 -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container -->
-</section>
-
-<!-- Portfolio -->
-<section id="courses" class="courses">
-   <div class="jumbotron">
-    <div class="container">
-        <table class="table" >
-            <thead>
-            <tr>
-                <th>Course ID</th>
-                <th>Course Name</th>
-                <th>Course Short Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="course : ${courses}">
-                <td th:text="${course.id}"></td>
-                <td><a href="#" th:text="${course.name}"></a></td>
-                <td th:text="${course.shortName}"></td>
-                <br>
-            </tr>
-            </tbody>
-
-        </table>
-    </div>
-  </div>
-    <!-- /.container -->
-</section>
-
-<!-- Call to Action -->
-<aside class="call-to-action bg-primary">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <a href="#" class="btn btn-lg btn-light">Go Back!</a>
-            </div>
         </div>
     </div>
-</aside>
-
+    </div>
+</section>
 
 <!-- Footer -->
 <footer>
