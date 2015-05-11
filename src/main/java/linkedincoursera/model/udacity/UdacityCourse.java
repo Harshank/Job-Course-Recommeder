@@ -1,4 +1,4 @@
-package linkedincoursera.model;
+package linkedincoursera.model.udacity;
 
 import java.util.List;
 

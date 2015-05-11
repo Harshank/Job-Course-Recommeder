@@ -1,4 +1,4 @@
-package linkedincoursera.model;
+package linkedincoursera.model.stackoverflow;
 
 import org.springframework.data.annotation.Id;
 

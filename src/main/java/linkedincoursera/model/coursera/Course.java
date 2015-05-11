@@ -1,11 +1,6 @@
-package linkedincoursera.model;
+package linkedincoursera.model.coursera;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.simple.JSONObject;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import linkedincoursera.model.coursera.Category;
 
 /**
  * Created by harsh on 4/18/15.

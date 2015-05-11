@@ -1,4 +1,4 @@
-package linkedincoursera.model;
+package linkedincoursera.model.linkedin;
 
 /**
  * Created by harsh on 4/20/15.

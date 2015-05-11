@@ -1,4 +1,4 @@
-package linkedincoursera.model;
+package linkedincoursera.model.coursera;
 
 import java.io.Serializable;
 import java.util.List;

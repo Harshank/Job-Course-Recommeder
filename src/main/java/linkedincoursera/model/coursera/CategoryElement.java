@@ -1,4 +1,6 @@
-package linkedincoursera.model;
+package linkedincoursera.model.coursera;
+
+import linkedincoursera.model.coursera.Categories;
 
 import java.util.List;
 

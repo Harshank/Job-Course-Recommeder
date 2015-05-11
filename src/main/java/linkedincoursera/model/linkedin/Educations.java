@@ -1,4 +1,4 @@
-package linkedincoursera.model;
+package linkedincoursera.model.linkedin;
 
 import java.util.Date;
 
