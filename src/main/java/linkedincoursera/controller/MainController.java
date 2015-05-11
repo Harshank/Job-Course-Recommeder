@@ -59,17 +59,22 @@ public class MainController {
     public String login() {
         return "greeting";
     }
-    @RequestMapping("/main")
-    public String homepage(Model model) {
+    @RequestMapping("/job")
+    public String jobPage(Model model) {
         getDetails(model);
-        return "main";
+        return "job";
+    }
+    @RequestMapping("/courses")
+    public String coursesPage(Model model) {
+        getDetails(model);
+        return "courses";
     }
 
     @RequestMapping("/auth/linkedin")
     public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
         access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
         getDetails(model);
-        return "main";
+        return "dashboard";
     }
     @RequestMapping("/recommendation")
     public String recommendScreen(Model model) {
@@ -187,6 +192,15 @@ public class MainController {
             List<Categories> categoryList = courseraService.getCategoriesList();
 
             model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+            //courseraRepo.addCourses(courses);
+            //courseraRepo.addCategories(categoryList);
+            System.out.println(linkedinService.getLinkedInProfileFull().getPositions().get(0).getCompany().getName());
+            System.out.println(courses.get(0).getLinks().getCategories());
+            courseraService.filterCourses("java");
+            if (basicProf != null)
+                model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+            else model.addAttribute("userName", "Anonymous");
+            model.addAttribute("headline", linkedinService.getLinkedInProfile().getHeadline());
             model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
             model.addAttribute("skills", skillSet);

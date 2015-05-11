@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Stylish Portfolio - Start Bootstrap Theme</title>
+    <title>LinedinCoursera</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet"
@@ -55,12 +55,30 @@
 
      <div class="col-lg-12 text-center">
         <div class="item mb centered">
-            <p><img class="img-circle" th:src="${profile}" width="150"></p>
-            <h3>Name : </h3> <h2 th:text=${userName}>"</h2>
+            <p><img class="img-circle" th:src="${profilePhotoUrl}" width="150"></p>
+            <h2 th:text=${userName}>"</h2>
             <h3>Headline:</h3> <p th:text="${headline}"></p>
             <h3>Summary :</h3> <p th:text="${summary}"></p>
             <h3>Skills :</h3><p th:text="${skills}"></p>
-            <h3>Education : </h3> <p th:text="${education}"></p>
+            <h2>Education</h2>
+            <table class="table" >
+                <thead>
+                <tr>
+                    <th>Degree</th>
+                    <th>Field of Study</th>
+                    <th>SchoolName</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="education : ${education}">
+                    <td th:text="${education.degree}"></td>
+                    <td th:text="${education.fieldOfStudy}"></td>
+                    <td th:text="${education.schoolName}"></td>
+                    <br />
+                </tr>
+                </tbody>
+
+            </table>
 
         </div>
     </div>
