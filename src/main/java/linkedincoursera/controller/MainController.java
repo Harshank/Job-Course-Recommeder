@@ -201,6 +201,31 @@ public class MainController {
     @RequestMapping(value ="/recommendations/courses", method=RequestMethod.GET)
     @ResponseBody
     public List recommendCourses(Model model) {
+        return null;
+    }
+    @RequestMapping("/jobs/{skill}")
+    @ResponseBody
+    public List recommendJobs(@PathVariable String skill) {
+        try {
+            List<JobSearchResult> jobs = careerBuilderService.fetchJobs(skill);
+            System.out.println("CAREERBUILDER:");
+            for(JobSearchResult job : jobs) {
+                System.out.println(job.getJobTitle());
+            }
+            ArrayList al = new ArrayList();
+            al.add(jobs);
+            return al;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    @RequestMapping(value ="/recommendations/{skill}", method=RequestMethod.GET)
+//    @ResponseBody
+    public String recommendCourses(Model model, @PathVariable String skill) {
+        System.out.println("**********************************");
+        ArrayList al = new ArrayList();
         try {
             List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
 
@@ -221,10 +246,10 @@ public class MainController {
             }
 
             model.addAttribute("courses", allCourses);
-            return allCourses;
+            return "main";
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList();
+            return null;
         }
     }
 
