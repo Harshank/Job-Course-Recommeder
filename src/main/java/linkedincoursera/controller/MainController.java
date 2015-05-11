@@ -3,7 +3,9 @@ package linkedincoursera.controller;
 
 import linkedincoursera.model.Categories;
 import linkedincoursera.model.Course;
+import linkedincoursera.model.QuestionCountSOF;
 import linkedincoursera.repository.CourseraRepo;
+import linkedincoursera.repository.StackOverflowRepo;
 import linkedincoursera.services.AuthorizationService;
 import linkedincoursera.services.CourseraService;
 import linkedincoursera.services.LinkedinService;
@@ -25,6 +27,7 @@ import java.util.List;
 @Controller
 @PropertySource(value = {"classpath:/properties/application.properties"},ignoreResourceNotFound = false)
 public class MainController {
+    static boolean toBeInserted= true;
     @Value("${api.key}")
     private String apikey;
     @Value("${api.secret}")
@@ -76,16 +79,24 @@ public class MainController {
             for(Course course :javaCourses) {
                 System.out.println(course.getName());
             }
-            //System.out.println(courses.get(0).getLinks().getCategories());
-            //courseraService.filterCourses("java");
-            //if(basicProf!=null)
-            //    model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
-            //else model.addAttribute("userName","Anonymous");
-            //model.addAttribute("education", educationsList);
-            //model.addAttribute("skills", skillSet);
-            //model.addAttribute("courses", courses);
+            System.out.println(courses.get(0).getLinks().getCategories());
+            courseraService.filterCourses("java");
+            if(basicProf!=null)
+                model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
+            else model.addAttribute("userName","Anonymous");
+            model.addAttribute("education", educationsList);
+            model.addAttribute("skills", skillSet);
+            model.addAttribute("courses", courses);
 //            linkedinService.getCompanyJobs(access_token);
-            //stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+            List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+            if(toBeInserted) {
+                courseraRepo.addCourses(courses);
+                courseraRepo.addCategories(categoryList);
+                StackOverflowRepo.addQuestionsCount(qtnCountSof);
+                toBeInserted = false;
+            }
+            System.out.println(qtnCountSof);
+
 //            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
 //            System.out.println("***************EDUCATION*******************");

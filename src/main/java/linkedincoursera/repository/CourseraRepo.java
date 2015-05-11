@@ -11,6 +11,11 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+
+import linkedincoursera.util.DBConnection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -20,10 +25,8 @@ import java.util.List;
  * Created by harsh on 5/9/15.
  */
 
-@Repository
+@Component
 public class CourseraRepo {
-    MongoOperations mongoTemplate;
-
     public CourseraRepo()
     {
         try
@@ -43,6 +46,10 @@ public class CourseraRepo {
         {
         }
     }
+
+    static MongoTemplate mongoTemplate = DBConnection.getConnection();
+    @Autowired
+    MongoClient client;
 
     public void addCourses(List<Course> courses) {
         for(Course c:courses) {
