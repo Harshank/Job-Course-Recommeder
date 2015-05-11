@@ -14,11 +14,9 @@ import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,8 +120,11 @@ public class MainController {
         }
     }
 
-    @RequestMapping("/recommendations")
-    public void recommendCourses(Model model, @RequestParam String skill) {
+    @RequestMapping(value ="/recommendations/{skill}", method=RequestMethod.GET)
+    @ResponseBody
+    public List recommendCourses(Model model, @PathVariable String skill) {
+        System.out.println("**********************************");
+        ArrayList al = new ArrayList();
         try {
             ArrayList<String> queryValues = new ArrayList<String>();
             queryValues.add(skill);
@@ -146,10 +147,13 @@ public class MainController {
             for(UdacityCourse course : filteredUdacityCourses) {
                 System.out.println(course.getTitle());
             }
-            model.addAttribute("courseraCourses", filteredCourseraCourses);
-            model.addAttribute("udacityCourses", filteredUdacityCourses);
+            al.add(filteredCourseraCourses);
+            al.add(filteredUdacityCourses);
+//            model.addAttribute("courseraCourses", filteredCourseraCourses);
+//            model.addAttribute("udacityCourses", filteredUdacityCourses);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return al;
     }
 }

@@ -60,9 +60,6 @@
     </div>
 </div>
 
-<div style="margin-top: 6%;">
-    <img th:src="${profilePhotoUrl}" style="width: 8%;"/>
-    <p th:text="${userName}" />
 
 <div style="margin-top: 8%;">
     <p th:text="${userName}" />
@@ -73,14 +70,8 @@
         <button id="submitSkill" class="k-primary">Go</button>
     </span>
 </div>
-</div>
-</body>
-<script th:inline="javascript">
-    var skills = [[${skills}]];
-    console.log(skills);
-    <div id ="courseDiv">
+<div id ="courseDiv">
 
-    </div>
 </div>
 </body>
 <script th:inline="javascript">
@@ -90,9 +81,12 @@
         $("#skillName").kendoDropDownList({
 //            dataTextField: "text",
 //            dataValueField: "value",
-            dataSource: skills,
+            dataSource: skill,
             height: 100
         });
+    });
+    $( "#submitSkill" ).bind( "click", function() {
+        fetchCourses($("#skillName").val());
     });
 </script>
 
