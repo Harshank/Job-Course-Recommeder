@@ -1,9 +1,9 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<!-- Latest compiled and minified CSS -->
+    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
           th:href="@{/css/kendo.common.min.css}"
           href="../css/kendo.common.min.css"/>
@@ -31,7 +31,7 @@
     <link rel="stylesheet" media="screen"
           th:href="@{/assets/css/main.css}"
           href="../assets/css/main.css"/>
-<!-- Latest compiled and minified JavaScript -->
+    <!-- Latest compiled and minified JavaScript -->
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/kendo.all.min.js"></script>
     <script type="text/javascript" src="../js/my.js"></script>
@@ -57,47 +57,35 @@
         </div><!--/.nav-collapse -->
     </div>
 </div>
-<div style="margin-top: 6%;">
-<img th:src="${profilePhotoUrl}" style="width: 8%;"/>
-
+<div style="margin-top: 8%;">
     <p th:text="${userName}" />
-    <br />
-    <h2>Summary</h2>
-<p th:text="${summary}" />
-    <h2>Education</h2>
-    <tr th:each="education : ${education}">
-        <td th:text="${education.degree}">1</td>
-        <td th:text="${education.fieldOfStudy}">T</td>
-        <td th:text="${education.schoolName}"></td>
-        <br />
-    </tr>
-    <h2>Work History</h2>
-    <tr th:each="pos : ${positions}">
-        <td th:text="${pos.title}"></td> <td>at</td>
-        <td th:text="${pos.company.name}"></td>
-        <br />
-    </tr>
     <h2>Skills</h2>
-    <td th:each="pos : ${skills}"><td>,</td><td th:text="${pos}"></td>
-    </td>
-</div>
+    <label>Skill: </label>
+    <input id="skillName" />
+    <span>
+        <button id="submitSkill" class="k-primary">Go</button>
+    </span>
+    <div id ="courseDiv">
 
+    </div>
+</div>
 </body>
-<!--<script th:inline="javascript">-->
-    <!--var skills = [[${skills}]];-->
-    <!--$(document).ready(function() {-->
-        <!--$("#submitSkill").kendoButton();-->
-        <!--$("#skillName").kendoDropDownList({-->
-<!--//            dataTextField: "text",-->
-<!--//            dataValueField: "value",-->
-            <!--dataSource: skills,-->
-            <!--height: 100-->
-        <!--});-->
-        <!--$( "#submitSkill" ).bind( "click", function() {-->
-            <!--var courses =[];-->
-            <!--fetchCourses($("#skillName").val());-->
-        <!--});-->
-    <!--});-->
-<!--</script>-->
+<script th:inline="javascript">
+    var skill = [[${skills}]];
+    $(document).ready(function() {
+        $("#submitSkill").kendoButton();
+        $("#skillName").kendoDropDownList({
+//            dataTextField: "text",
+//            dataValueField: "value",
+            dataSource: skill,
+            height: 100
+        });
+        $( "#submitSkill" ).bind( "click", function() {
+            var courses =[];
+            courses = fetchCourses($("#skillName").val());
+            $("#courseDiv").html(courses);
+        });
+    });
+</script>
 
 </html>

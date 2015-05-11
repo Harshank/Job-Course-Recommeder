@@ -25,6 +25,7 @@ import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,6 +50,7 @@ public class MainController {
     public StackoverflowService stackoverflowService;
     @Autowired
     public CourseraRepo courseraRepo;
+    static String access_token="";
     @RequestMapping("/")
     public String index() {
     	String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_fullprofile";
@@ -59,10 +61,27 @@ public class MainController {
     public String login() {
         return "greeting";
     }
+    @RequestMapping("/main")
+    public String homepage(Model model) {
+        getDetails(model);
+        return "main";
+    }
 
     @RequestMapping("/auth/linkedin")
     public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
-        String access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
+        access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
+        getDetails(model);
+        return "main";
+    }
+    @RequestMapping("/recommendation")
+    public String recommendScreen(Model model) {
+        LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+        List<String> skillSet = linkedinService.getSkillSet();
+        model.addAttribute("skills",skillSet);
+        model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+        return "recommendations";
+    }
+    public void getDetails(Model model) {
         try {
             linkedinService.setApi(access_token);
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
@@ -71,6 +90,7 @@ public class MainController {
             List <Education> educationsList = linkedinService.getEducations();
             List<Course> courses = courseraService.fetchCourses();
             List<Categories> categoryList = courseraService.getCategoriesList();
+            System.out.println(linkedinService.getLinkedInProfileFull().getPositions().get(0).getCompany().getName());
             System.out.println(courses.get(0).getLinks().getCategories());
             courseraService.filterCourses("java");
             if(basicProf!=null)
@@ -79,7 +99,9 @@ public class MainController {
             model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
             model.addAttribute("skills", skillSet);
+            model.addAttribute("summary", linkedinService.getLinkedInProfile().getSummary());
             model.addAttribute("courses", courses);
+            model.addAttribute("positions", linkedinService.getLinkedInProfileFull().getPositions());
 //            linkedinService.getCompanyJobs(access_token);
             List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
             if(toBeInserted) {
@@ -88,18 +110,9 @@ public class MainController {
 //                StackOverflowRepo.addQuestionsCount(qtnCountSof);
                 toBeInserted = false;
             }
-
-//            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
-//            System.out.println();
-//            System.out.println("***************EDUCATION*******************");
-//            educationsList.forEach(education -> System.out.println(education.getDegree() + " " + education.getFieldOfStudy() + " " + education.getSchoolName()));
-//`            System.out.println("***************SKILLS*******************");
-//            System.out.println(skillSet);
-//            System.out.println("***************COURSES*******************");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "main";
-    }
 
+    }
 }
