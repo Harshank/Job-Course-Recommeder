@@ -5,18 +5,15 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import linkedincoursera.model.Categories;
-import linkedincoursera.model.Course;
-import org.springframework.data.mongodb.core.MongoOperations;
+import linkedincoursera.model.coursera.Categories;
+import linkedincoursera.model.coursera.Course;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import linkedincoursera.util.DBConnection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;

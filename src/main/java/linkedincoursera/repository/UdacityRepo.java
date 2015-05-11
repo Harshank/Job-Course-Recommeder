@@ -1,6 +1,6 @@
 package linkedincoursera.repository;
 
-import linkedincoursera.model.UdacityCourse;
+import linkedincoursera.model.udacity.UdacityCourse;
 import linkedincoursera.util.DBConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;

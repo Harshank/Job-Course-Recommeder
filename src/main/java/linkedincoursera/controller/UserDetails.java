@@ -1,8 +1,7 @@
 package linkedincoursera.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import linkedincoursera.model.Educations;
-import org.json.simple.JSONArray;
+import linkedincoursera.model.linkedin.Educations;
 import org.json.simple.JSONObject;
 
 import java.util.Date;

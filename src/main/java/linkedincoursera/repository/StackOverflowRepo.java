@@ -1,6 +1,6 @@
 package linkedincoursera.repository;
 
-import linkedincoursera.model.QuestionCountSOF;
+import linkedincoursera.model.stackoverflow.QuestionCountSOF;
 import linkedincoursera.util.DBConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

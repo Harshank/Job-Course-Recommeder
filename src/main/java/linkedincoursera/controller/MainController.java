@@ -1,9 +1,10 @@
 package linkedincoursera.controller;
 
 
-import linkedincoursera.model.Categories;
-import linkedincoursera.model.Course;
-import linkedincoursera.model.UdacityCourse;
+import linkedincoursera.model.careerbuilder.JobSearchResult;
+import linkedincoursera.model.coursera.Categories;
+import linkedincoursera.model.coursera.Course;
+import linkedincoursera.model.udacity.UdacityCourse;
 import linkedincoursera.repository.CourseraRepo;
 import linkedincoursera.repository.UdacityRepo;
 import linkedincoursera.services.*;
@@ -14,8 +15,6 @@ import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,6 +40,8 @@ public class MainController {
     UdacityService udacityService;
     @Autowired
     public StackoverflowService stackoverflowService;
+    @Autowired
+    public CareerBuilderService careerBuilderService;
     @Autowired
     public CourseraRepo courseraRepo;
     @Autowired
@@ -116,7 +117,11 @@ public class MainController {
 //`            System.out.println("***************SKILLS*******************");
 //            System.out.println(skillSet);
 //            System.out.println("***************COURSES*******************");
-            toBeInserted = false;
+//            toBeInserted = false;
+            List<JobSearchResult> jobs = careerBuilderService.fetchJobs("Java");
+            for(JobSearchResult job : jobs) {
+                System.out.println(job.getJobTitle());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,10 +130,7 @@ public class MainController {
     @RequestMapping("/recommendations")
     public void recommendCourses(Model model, @RequestParam String skill) {
         try {
-            ArrayList<String> queryValues = new ArrayList<String>();
-            queryValues.add(skill);
-
-            List<Course> courseraCourses = courseraService.fetchCourses(queryValues);
+            List<Course> courseraCourses = courseraService.fetchCourses(skill);
             ArrayList<Course> filteredCourseraCourses = new ArrayList<Course>();
             for (Course course : courseraCourses) {
                 if(course.getLanguage().equals("en")) {
@@ -139,15 +141,26 @@ public class MainController {
             List<UdacityCourse> udacityCourses = udacityService.fetchCourses();
             List<UdacityCourse> filteredUdacityCourses = UdacityService.searchCourses(udacityCourses, skill);
 
+            List<JobSearchResult> jobs = careerBuilderService.fetchJobs(skill);
+
+            System.out.println("COURSERA:");
             for (Course course : filteredCourseraCourses) {
                 System.out.println(course.getName());
             }
 
+            System.out.println("UDACITY:");
             for(UdacityCourse course : filteredUdacityCourses) {
                 System.out.println(course.getTitle());
             }
+
+            System.out.println("CAREERBUILDER:");
+            for(JobSearchResult job : jobs) {
+                System.out.println(job.getJobTitle());
+            }
+
             model.addAttribute("courseraCourses", filteredCourseraCourses);
             model.addAttribute("udacityCourses", filteredUdacityCourses);
+            model.addAttribute("jobs", jobs);
         } catch (Exception e) {
             e.printStackTrace();
         }

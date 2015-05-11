@@ -64,15 +64,15 @@
     <img th:src="${profilePhotoUrl}" style="width: 8%;"/>
     <p th:text="${userName}" />
 
-<div style="margin-top: 8%;">
-    <p th:text="${userName}" />
-    <h2>Skills</h2>
-    <label>Skill: </label>
-    <input id="skillName" />
+    <div style="margin-top: 8%;">
+        <p th:text="${userName}" />
+        <h2>Skills</h2>
+        <label>Skill: </label>
+        <input id="skillName" />
     <span>
         <button id="submitSkill" class="k-primary">Go</button>
     </span>
-</div>
+    </div>
 </div>
 </body>
 <script th:inline="javascript">
@@ -81,8 +81,7 @@
     <div id ="courseDiv">
 
     </div>
-</div>
-</body>
+</script>
 <script th:inline="javascript">
     var skill = [[${skills}]];
     $(document).ready(function() {

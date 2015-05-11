@@ -1,7 +1,7 @@
 package linkedincoursera.services;
 
-import linkedincoursera.model.UdacityCourse;
-import linkedincoursera.model.UdacityCourseList;
+import linkedincoursera.model.udacity.UdacityCourse;
+import linkedincoursera.model.udacity.UdacityCourseList;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;

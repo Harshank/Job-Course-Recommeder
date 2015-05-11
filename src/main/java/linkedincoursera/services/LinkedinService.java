@@ -1,22 +1,12 @@
 package linkedincoursera.services;
 
-import linkedincoursera.model.QuesSof;
-import linkedincoursera.model.QuestionCountSOF;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.http.*;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.linkedin.api.*;
 import org.springframework.social.linkedin.api.impl.LinkedInTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
