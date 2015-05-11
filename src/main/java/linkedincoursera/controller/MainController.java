@@ -3,18 +3,13 @@ package linkedincoursera.controller;
 
 import linkedincoursera.model.Categories;
 import linkedincoursera.model.Course;
-import linkedincoursera.model.QuestionCountSOF;
+import linkedincoursera.model.UdacityCourse;
 import linkedincoursera.repository.CourseraRepo;
-import linkedincoursera.repository.StackOverflowRepo;
-import linkedincoursera.services.AuthorizationService;
-import linkedincoursera.services.CourseraService;
-import linkedincoursera.services.LinkedinService;
-import linkedincoursera.services.StackoverflowService;
+import linkedincoursera.repository.UdacityRepo;
+import linkedincoursera.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
@@ -22,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -40,9 +36,13 @@ public class MainController {
     @Autowired
     CourseraService courseraService;
     @Autowired
+    UdacityService udacityService;
+    @Autowired
     public StackoverflowService stackoverflowService;
     @Autowired
     public CourseraRepo courseraRepo;
+    @Autowired
+    public UdacityRepo udacityRepo;
     @RequestMapping("/")
     public String index() {
     	String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_fullprofile";
@@ -67,21 +67,6 @@ public class MainController {
             List<Categories> categoryList = courseraService.getCategoriesList();
             //courseraRepo.addCourses(courses);
             //courseraRepo.addCategories(categoryList);
-            //List<Categories> categories = courseraRepo.findAll();
-            //for(Categories category : categories) {
-            //    System.out.println(category.getName());
-            //}
-            //List<Categories> csCategories = courseraRepo.findCategories("shortName", "^cs-");
-            //for(Categories category : csCategories) {
-            //    System.out.println(category.getName());
-            //}
-            Query query = new Query(Criteria.where("shortDescription").regex("java|Java").and("language").is("en"));
-            List<Course> javaCourses = courseraRepo.findCourses(query);
-            for(Course course :javaCourses) {
-                System.out.println(course.getName());
-            }
-            System.out.println(courses.get(0).getLinks().getCategories());
-            courseraService.filterCourses("java");
             if(basicProf!=null)
                 model.addAttribute("userName",basicProf.getFirstName()+" "+basicProf.getLastName());
             else model.addAttribute("userName","Anonymous");
@@ -89,14 +74,15 @@ public class MainController {
             model.addAttribute("education", educationsList);
             model.addAttribute("skills", skillSet);
             model.addAttribute("courses", courses);
+            //udacityRepo.addCourses(udacityCourses);
 //            linkedinService.getCompanyJobs(access_token);
-            List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
-            if(toBeInserted) {
+            //List<QuestionCountSOF> qtnCountSof = stackoverflowService.fetchMostAskedQuestionsStackoverflow();
+            //if(toBeInserted) {
 //                courseraRepo.addCourses(courses);
 //                courseraRepo.addCategories(categoryList);
 //                StackOverflowRepo.addQuestionsCount(qtnCountSof);
-                toBeInserted = false;
-            }
+            //    toBeInserted = false;
+            //}
 
 //            courses.forEach(course -> System.out.println(course.getId() + " " + course.getLanguage() + " " + course.getName() + " " + course.getShortName()));
 //            System.out.println();
@@ -109,6 +95,37 @@ public class MainController {
             e.printStackTrace();
         }
         return "main";
+    }
+
+    @RequestMapping("/recommendations")
+    public void recommendCourses(Model model, @RequestParam String skill) {
+        try {
+            ArrayList<String> queryValues = new ArrayList<String>();
+            queryValues.add(skill);
+
+            List<Course> courseraCourses = courseraService.fetchCourses(queryValues);
+            ArrayList<Course> filteredCourseraCourses = new ArrayList<Course>();
+            for (Course course : courseraCourses) {
+                if(course.getLanguage().equals("en")) {
+                    filteredCourseraCourses.add(course);
+                }
+            }
+
+            List<UdacityCourse> udacityCourses = udacityService.fetchCourses();
+            List<UdacityCourse> filteredUdacityCourses = UdacityService.searchCourses(udacityCourses, skill);
+
+            for (Course course : filteredCourseraCourses) {
+                System.out.println(course.getName());
+            }
+
+            for(UdacityCourse course : filteredUdacityCourses) {
+                System.out.println(course.getTitle());
+            }
+            model.addAttribute("courseraCourses", filteredCourseraCourses);
+            model.addAttribute("udacityCourses", filteredUdacityCourses);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -10,7 +10,7 @@ public class Categories implements Serializable {
     private int id;
     private String shortName;
     private String name;
-//    private List links;
+    private List links;
 
     public int getId() {
         return id;

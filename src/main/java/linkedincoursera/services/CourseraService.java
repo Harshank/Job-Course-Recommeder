@@ -39,6 +39,31 @@ public class CourseraService {
         }
     }
 
+    public List<Course> fetchCourses(ArrayList<String> queryValues) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> stringHttpEntity = new HttpEntity<String>(headers);
+        try{
+            // {elements:[arrOfCourseObjects]} .. need to keep the names same to map
+            String url = "https://api.coursera.org/api/catalog.v1/courses?includes=categories&fields=language,photo," +
+                    "largeIcon,instructor,previewLink,shortDescription&q=search&query=";
+            if(queryValues.size() > 0) {
+                for (int i = 0; i < queryValues.size() - 1; i++) {
+                    url += queryValues.get(i) + "+";
+                }
+                url += queryValues.get(queryValues.size() - 1);
+                System.out.println(url);
+            }
+            ResponseEntity<Elements> response = restTemplate.exchange(
+                    url, HttpMethod.GET, stringHttpEntity, Elements.class);
+            System.out.println(response.getStatusCode());
+            Elements elements= response.getBody();
+            return elements.getElements();
+        }catch(HttpClientErrorException e){
+            throw new Exception(e);
+        }
+    }
+
     public List<Categories> getCategoriesList() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -59,40 +84,5 @@ public class CourseraService {
 
     public void filterCourses(String searchParam) {
 
-    }
-
-    public ArrayList<Categories> filterCsCategories(ArrayList<Categories> categories) {
-        /**
-         * Filter computer science categories from list of categories
-         */
-        ArrayList<Categories> csCategories = new ArrayList<Categories>();
-        for(Categories category : categories) {
-            if(category.getShortName().startsWith("cs-")) {
-                csCategories.add(category);
-            }
-        }
-        return categories;
-    }
-
-    public ArrayList<Course> filterCsCourses(ArrayList<Course> courses, ArrayList<Categories> categories) {
-        ArrayList<Course> csCourses = new ArrayList<Course>();
-
-        ArrayList<Integer> csCategoryIds = new ArrayList<Integer>();
-        ArrayList<Categories> csCategories = filterCsCategories(categories);
-        for(Categories csCategory : csCategories) {
-            csCategoryIds.add(csCategory.getId());
-        }
-
-        for(Course course : courses) {
-            List<Integer> courseCategories = course.getLinks().getCategories();
-            for(Integer courseCategory : courseCategories) {
-                if(csCategoryIds.contains(courseCategory)) {
-                    csCourses.add(course);
-                    break;
-                }
-            }
-        }
-
-        return csCourses;
     }
 }
