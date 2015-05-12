@@ -23,7 +23,9 @@
     <link rel="stylesheet"
           th:href="@{/css/stylish-portfolio.css}"
           href="../css/stylish-portfolio.css"/>
-    <!-- Custom Fonts -->
+    <link rel="stylesheet" media="screen"
+          th:href="@{/assets/css/main.css}"
+          href="../assets/css/main.css"/>    <!-- Custom Fonts -->
 
     <link rel="stylesheet"
           th:href="@{/font-awesome/css/font-awesome.min.css}"
@@ -64,18 +66,13 @@
             <table class="" align="center">
                 <tbody>
                 <tr th:each="pos : ${positions}">
-                    <td th:text="${pos.title}"></td> <td>at</td>
+                    <td th:text="${pos.title}"></td> <td> at</td>
                     <td th:text="${pos.company.name}"></td>
                     <br />
                 </tr>
                 </tbody>
 
             </table>
-            <tr th:each="pos : ${positions}">
-                <td th:text="${pos.title}"></td> <td>at</td>
-                <td th:text="${pos.company.name}"></td>
-                <br />
-            </tr>
             <h3>Education</h3>
             <table class="" align="center">
                 <tbody>
