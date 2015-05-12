@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>LinedinCoursera</title>
+    <title>LinkedIn Coursera</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet"
@@ -45,10 +45,10 @@
 <body>
 
 <ul class="nav nav-pills">
-    <li role="presentation" class="active"><a href="#top">Home</a></li>
-    <li role="presentation"><a href="/profile">Profile</a></li>
+    <li role="presentation" class="active"><a href="#">Home</a></li>
     <li role="presentation"><a href="/recommendations/jobs">Jobs</a></li>
     <li role="presentation"><a href="/recommendations/courses">Courses</a></li>
+    <li role="presentation"><a href="#footer">About</a></li>
 </ul>
 
 <!-- Header -->
@@ -62,13 +62,13 @@
             <h3>Headline:</h3> <p th:text="${headline}"></p>
             <h3>Summary :</h3> <p th:text="${summary}"></p>
             <h3>Skills :</h3><p th:text="${skills}"></p>
-            <h2>Work History</h2>
+            <h3>Work History</h3>
             <table class="" align="center">
                 <tbody>
                 <tr th:each="pos : ${positions}">
-                    <td th:text="${pos.title}"></td> <td> at</td>
-                    <td th:text="${pos.company.name}"></td>
-                    <br />
+                    <p th:text="${pos.title}"></p>
+                    <p th:text="${pos.company.name}"></p>
+                    <br/>
                 </tr>
                 </tbody>
 
@@ -77,9 +77,8 @@
             <table class="" align="center">
                 <tbody>
                 <tr th:each="education : ${education}">
-                    <td th:text="${education.degree}"></td><td>: </td>
-                    <td th:text="${education.fieldOfStudy}"></td><td> at </td>
-                    <td th:text="${education.schoolName}"></td>
+                    <p th:text="${education.degree}"></p><p th:text="${education.fieldOfStudy}"> </p>
+                    <p th:text="${education.schoolName}"> </p>
                     <br />
                 </tr>
                 </tbody>
@@ -92,16 +91,17 @@
 </section>
 
 <!-- Footer -->
-<footer>
+<footer id="footer" class="footer">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1 text-center">
-                <h4><strong>San Jose State University</strong>
-                </h4>
+                <h4><strong>CMPE 273</strong></h4>
+                <h4><strong>Prof. Sithu Aung</strong></h4>
+                <h4><strong>San Jose State University</strong></h4>
                 <p>One Washington Square<br>San Jose, CA 95112</p>
                 <ul class="list-unstyled">
                     <li><i class="fa fa-phone fa-fw"></i> (123) 456-7890</li>
-                    <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:name@example.com">name@example.com</a>
+                    <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:name@example.com">cmpe273@sjsu.edu</a>
                     </li>
                 </ul>
                 <br>

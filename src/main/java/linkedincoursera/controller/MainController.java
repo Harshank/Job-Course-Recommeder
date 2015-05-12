@@ -74,7 +74,11 @@ public class MainController {
         getDetails(model);
         return "main";
     }
-
+    @RequestMapping("/dasboard")
+    public String homepage(Model model) {
+        getDetails(model);
+        return "dashboard";
+    }
     @RequestMapping("/auth/linkedin")
     public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
         access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
