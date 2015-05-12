@@ -59,15 +59,20 @@ public class MainController {
     public String login() {
         return "greeting";
     }
-    @RequestMapping("/job")
-    public String jobPage(Model model) {
+    @RequestMapping("/jobs")
+    public String jobpage(Model model) {
         getDetails(model);
         return "job";
     }
     @RequestMapping("/courses")
-    public String coursesPage(Model model) {
+    public String coursespage(Model model) {
         getDetails(model);
         return "courses";
+    }
+    @RequestMapping("/main")
+    public String homepage(Model model) {
+        getDetails(model);
+        return "main";
     }
 
     @RequestMapping("/auth/linkedin")
@@ -192,15 +197,6 @@ public class MainController {
             List<Categories> categoryList = courseraService.getCategoriesList();
 
             model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
-            //courseraRepo.addCourses(courses);
-            //courseraRepo.addCategories(categoryList);
-            System.out.println(linkedinService.getLinkedInProfileFull().getPositions().get(0).getCompany().getName());
-            System.out.println(courses.get(0).getLinks().getCategories());
-            courseraService.filterCourses("java");
-            if (basicProf != null)
-                model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
-            else model.addAttribute("userName", "Anonymous");
-            model.addAttribute("headline", linkedinService.getLinkedInProfile().getHeadline());
             model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
             model.addAttribute("skills", skillSet);
@@ -213,33 +209,8 @@ public class MainController {
     }
 
     @RequestMapping(value ="/recommendations/courses", method=RequestMethod.GET)
-    @ResponseBody
-    public List recommendCourses(Model model) {
-        return null;
-    }
-    @RequestMapping("/jobs/{skill}")
-    @ResponseBody
-    public List recommendJobs(@PathVariable String skill) {
-        try {
-            List<JobSearchResult> jobs = careerBuilderService.fetchJobs(skill);
-            System.out.println("CAREERBUILDER:");
-            for(JobSearchResult job : jobs) {
-                System.out.println(job.getJobTitle());
-            }
-            ArrayList al = new ArrayList();
-            al.add(jobs);
-            return al;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-    @RequestMapping(value ="/recommendations/{skill}", method=RequestMethod.GET)
 //    @ResponseBody
-    public String recommendCourses(Model model, @PathVariable String skill) {
-        System.out.println("**********************************");
-        ArrayList al = new ArrayList();
+    public String recommendCourses(Model model) {
         try {
             List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
 
@@ -258,18 +229,20 @@ public class MainController {
             for(UdacityCourse course : recommendedUdacity) {
                 System.out.println(course.getTitle());
             }
-
-            model.addAttribute("courses", allCourses);
-            return "main";
+            model.addAttribute("courseraCourses",recommendedUdacity);
+            model.addAttribute("udacityCourses",recommendedUdacity);
+//            model.addAttribute("courses", allCourses);
+//            return allCourses;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+//            return new ArrayList();
         }
+        return "courses";
     }
 
     @RequestMapping(value ="/recommendations/jobs", method=RequestMethod.GET)
-    @ResponseBody
-    public List recommendJobs(Model model) {
+//    @ResponseBody
+    public String recommendJobs(Model model) {
         try {
             List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
             List<JobSearchResult> recommendedJobs = recommendJobs(skillsByPopularity);
@@ -280,10 +253,11 @@ public class MainController {
             }
 
             model.addAttribute("jobs", recommendedJobs);
-            return recommendedJobs;
+//            return recommendedJobs;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<JobSearchResult>();
+//            return new ArrayList<JobSearchResult>();
         }
+        return "job";
     }
 }

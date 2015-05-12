@@ -45,8 +45,8 @@
 <ul class="nav nav-pills">
     <li role="presentation" class="active"><a href="#top">Home</a></li>
     <li role="presentation"><a href="/profile">Profile</a></li>
-    <li role="presentation"><a href="/jobs">Jobs</a></li>
-    <li role="presentation"><a href="/courses">Courses</a></li>
+    <li role="presentation"><a href="/recommendations/jobs">Jobs</a></li>
+    <li role="presentation"><a href="/recommendations/courses">Courses</a></li>
 </ul>
 
 <!-- Header -->
@@ -60,19 +60,28 @@
             <h3>Headline:</h3> <p th:text="${headline}"></p>
             <h3>Summary :</h3> <p th:text="${summary}"></p>
             <h3>Skills :</h3><p th:text="${skills}"></p>
-            <h2>Education</h2>
-            <table class="table" >
-                <thead>
-                <tr>
-                    <th>Degree</th>
-                    <th>Field of Study</th>
-                    <th>SchoolName</th>
+            <h2>Work History</h2>
+            <table class="" align="center">
+                <tbody>
+                <tr th:each="pos : ${positions}">
+                    <td th:text="${pos.title}"></td> <td>at</td>
+                    <td th:text="${pos.company.name}"></td>
+                    <br />
                 </tr>
-                </thead>
+                </tbody>
+
+            </table>
+            <tr th:each="pos : ${positions}">
+                <td th:text="${pos.title}"></td> <td>at</td>
+                <td th:text="${pos.company.name}"></td>
+                <br />
+            </tr>
+            <h3>Education</h3>
+            <table class="" align="center">
                 <tbody>
                 <tr th:each="education : ${education}">
-                    <td th:text="${education.degree}"></td>
-                    <td th:text="${education.fieldOfStudy}"></td>
+                    <td th:text="${education.degree}"></td><td>: </td>
+                    <td th:text="${education.fieldOfStudy}"></td><td> at </td>
                     <td th:text="${education.schoolName}"></td>
                     <br />
                 </tr>
