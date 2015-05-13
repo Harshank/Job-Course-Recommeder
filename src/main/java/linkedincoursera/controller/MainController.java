@@ -172,7 +172,7 @@ public class MainController {
         }
         List<JobSearchResult> resultJobs = new ArrayList<JobSearchResult>(recoJobs);
         if(resultJobs.size() > 10) {
-            resultJobs = resultJobs.subList(0, 20);
+            resultJobs = resultJobs.subList(0, 10);
         }
         return resultJobs;
     }
