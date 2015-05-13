@@ -87,24 +87,20 @@ public class LinkedinService {
         user.setSummary(summary);
         user.setEmail(email);
         List<Positions> positions = new ArrayList<Positions>();
-        positions.add(0, new Positions("Openradix Software Solutions", "Java Developer"));
-        positions.add(1, new Positions("Mozilla Firefox", "Project Intern"));
+        positions.add(0, new Positions("Bitcasa", "QA Automation Engineer"));
         user.setPositions(positions);
         List<Educations> edu = new ArrayList<Educations>();
         edu.add(0, new Educations("", "Masters", "San Jose State University","Software Engineering"));
-        edu.add(1, new Educations("", "Bachelors", "University of Mumbai","Computer Engineering"));
+        edu.add(1, new Educations("", "Bachelors", "University of California, Berkeley","Molecular and Cell Biology"));
         user.setEducation(edu);
         List<String> skills = new ArrayList<String>();
-        skills.add(0,"Node.js");
-        skills.add(1,"C++");
-        skills.add(2,"MySQL");
-        skills.add(3,"Java");
-        skills.add(4, "JavaScript");
+        skills.add(0,"Python");
+        skills.add(1,"Java");
+        skills.add(2,"C");
+        skills.add(3,"C++");
+        skills.add(4, "SQL");
         skills.add(5,"Linux");
-        skills.add(6,"MongoDb");
-        skills.add(7, "jQuery");
         user.setSkillSet(skills);
-
 
         linkedinRepo.insertLinkedUser(user);
     }

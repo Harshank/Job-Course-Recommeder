@@ -37,7 +37,7 @@ public class KafkaProducer {
         this.producer = producer;
     }
 
-    @Scheduled(fixedRate = 86400000)
+    @Scheduled(cron = "0 0 0 * * ?")
     public void sendMessage() {
         Calendar cal = Calendar.getInstance();
         int currentDayOfYear = cal.get(Calendar.DAY_OF_YEAR);
@@ -56,10 +56,7 @@ public class KafkaProducer {
                 greg.setTime(date);
                 int startDayOfYear = greg.get(GregorianCalendar.DAY_OF_YEAR);
                 int currentYear = greg.get(GregorianCalendar.YEAR)+1;
-                System.out.println(startY);
-                System.out.println(currentYear);
-                System.out.println(course.getUserEmail());
-                if (((currentDayOfYear + 7 > startDayOfYear && startY == currentYear) || startY < currentYear)) {
+                if (((currentDayOfYear + 7 > startDayOfYear) || startY < currentYear)) {
                     String userEmail = course.getUserEmail();
                     String name = course.getName();
                     String homelink = course.getHomeLink();

@@ -13,11 +13,9 @@ import linkedincoursera.repository.UdacityRepo;
 import linkedincoursera.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @PropertySource(value = {"classpath:/properties/application.properties"},ignoreResourceNotFound = false)
@@ -189,10 +190,10 @@ public class MainController {
         linkedinService.setApi(access_token);
         LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
         LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
-        if(user!=null) {
+        //if(user!=null) {
             response.addCookie(new Cookie("userEmail",basicProf.getEmailAddress()));
             getDetails(model, basicProf, user);
-        }
+        //}
         return "dashboard";
     }
 
@@ -205,8 +206,9 @@ public class MainController {
             String summary  = linkedinService.getLinkedInProfile().getSummary();
             // UTILITY TO INSERT USER
 
-//            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
+            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
                 String profilePhotoUrl = user.getProfilePhotoUrl();
+            System.out.println(user.getProfilePhotoUrl());
                 List<String> skillSet = user.getSkillSet();
                 List<Educations> educationsList = user.getEducation();
                 List<Course> courses = courseraService.fetchCourses();
