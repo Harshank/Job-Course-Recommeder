@@ -121,7 +121,7 @@ public class MainController {
             for(String skill : skillSet) {
                 List<UdacityCourse> udacityCourses = udacityService.fetchCourses();
                 List<UdacityCourse> filteredUdacityCourses = UdacityService.searchCourses(udacityCourses, skill);
-                courses.addAll(udacityCourses);
+                courses.addAll(filteredUdacityCourses);
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());

@@ -6,6 +6,7 @@ package linkedincoursera.model.coursera;
 public class Session {
     private int id;
     private String homelink;
+    private int startDay;
     private int startMonth;
     private int startYear;
 
@@ -24,6 +25,10 @@ public class Session {
     public void setHomelink(String homelink) {
         this.homelink = homelink;
     }
+
+    public int getStartDay() { return startDay; }
+
+    public void setStartDay(int startDay) { this.startDay = startDay; }
 
     public int getStartMonth() {
         return startMonth;
