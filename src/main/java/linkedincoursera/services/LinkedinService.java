@@ -101,7 +101,8 @@ public class LinkedinService {
         skills.add(4, "SQL");
         skills.add(5,"Linux");
         user.setSkillSet(skills);
-
+//        user.setCity("Milpitas");
+//        user.setState("CA");
         linkedinRepo.insertLinkedUser(user);
     }
     public LinkedinUser findUserByEmail(String email) {
