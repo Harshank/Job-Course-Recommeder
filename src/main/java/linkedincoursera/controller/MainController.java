@@ -147,15 +147,18 @@ public class MainController {
     }
 
     public List<JobSearchResult> recommendJobs(List<String> skillSet) {
+        String location = linkedinService.getLinkedInProfileFull().getLocation().getName();
+        System.out.println(location);
         List<JobSearchResult> jobs = new ArrayList<JobSearchResult>();
         HashSet<JobSearchResult> recoJobs = new HashSet<JobSearchResult>();
         try {
-            if(skillSet.size() > 3) {
+            if(skillSet.size
+                    () > 3) {
                 skillSet = skillSet.subList(0, 3);
             }
 
             for(String skill : skillSet) {
-                List<JobSearchResult> jobSearchResults = careerBuilderService.fetchJobs(skill);
+                List<JobSearchResult> jobSearchResults = careerBuilderService.fetchJobs(skill, location);
                 for(JobSearchResult job:jobSearchResults) {
                     if(job.getCompany()!=null)
                         jobs.add(job);
