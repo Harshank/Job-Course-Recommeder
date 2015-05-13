@@ -16,15 +16,17 @@ public class LinkedinUser implements Serializable {
     private String headline;
     private List<String> skillSet;
     private String summary;
+    private String email;
     private List<Positions> positions;
     public LinkedinUser() {}
-    public LinkedinUser(String userName, String profilePhotoUrl, List<Educations> education, String headline, List<String> skillSet, String summary, List<Positions> positions) {
+    public LinkedinUser(String userName, String profilePhotoUrl, List<Educations> education, String headline, List<String> skillSet, String summary, String email, List<Positions> positions) {
         this.userName = userName;
         this.profilePhotoUrl = profilePhotoUrl;
         this.education = education;
         this.headline = headline;
         this.skillSet = skillSet;
         this.summary = summary;
+        this.email = email;
         this.positions = positions;
     }
     public String getUserName() {
@@ -81,5 +83,13 @@ public class LinkedinUser implements Serializable {
 
     public void setPositions(List<Positions> positions) {
         this.positions = positions;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

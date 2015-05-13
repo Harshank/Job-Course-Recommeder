@@ -91,6 +91,7 @@ public class LinkedinService {
         positions.add(0, new Positions("Openradix Software Solutions", "Java Developer"));
         positions.add(1, new Positions("Mozilla Firefox", "Project Intern"));
         user.setPositions(positions);
+        user.setEmail("vharshank@gmail.com");
         List<Educations> edu = new ArrayList<Educations>();
         edu.add(0, new Educations("", "Masters", "San Jose State University","Software Engineering"));
         edu.add(1, new Educations("", "Bachelors", "University of Mumbai","Computer Engineering"));

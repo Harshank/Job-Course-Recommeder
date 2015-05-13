@@ -196,8 +196,10 @@ public class MainController {
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
 
             // UTILITY TO INSERT USER
-//            linkedinService.insertUser();
+            linkedinService.insertUser();
             user = linkedinService.findUser("Harshank Vengurlekar");
+
+            // WORKING - Get photo URL
 //            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
 //            List<String> skillSet = linkedinService.getSkillSet();
 //            List<Education> educationsList = linkedinService.getEducations();
