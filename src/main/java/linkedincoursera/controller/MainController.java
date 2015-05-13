@@ -22,6 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,37 +56,22 @@ public class MainController {
     @Autowired
     public UdacityRepo udacityRepo;
 
-    static String access_token="";
+    private String access_token="";
 
     @RequestMapping("/")
     public String index() {
-        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
+        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_emailaddress";
         return "redirect:"+url;
     }
-    private LinkedinUser user = new LinkedinUser();
     @RequestMapping("/login")
     public String login() {
         return "greeting";
     }
-    @RequestMapping("/jobs")
-    public String jobpage(Model model) {
-        getDetails(model);
-        return "job";
-    }
-    @RequestMapping("/courses")
-    public String coursespage(Model model) {
-        getDetails(model);
-        return "courses";
-    }
     @RequestMapping("/dashboard")
-    public String homepage(Model model) {
-        getDetails(model);
-        return "dashboard";
-    }
-    @RequestMapping("/auth/linkedin")
-    public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
-        access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
-        getDetails(model);
+    public String homepage(Model model, HttpServletRequest request,HttpServletResponse response) {
+        LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+        LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
+        getDetails(model, basicProf, user);
         return "dashboard";
     }
     @RequestMapping("/recommendation")
@@ -193,21 +181,29 @@ public class MainController {
         }
         return orderedSkillSet;
     }
+    @RequestMapping("/auth/linkedin")
+    public String authenticate(Model model, @RequestParam String code, @RequestParam String state, HttpServletResponse response) {
+        access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
+        linkedinService.setApi(access_token);
+        LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+        LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
+        if(user!=null) {
+            response.addCookie(new Cookie("userEmail",basicProf.getEmailAddress()));
+            getDetails(model, basicProf, user);
+        }
+        return "dashboard";
+    }
 
-    public void getDetails(Model model) {
+    public void getDetails(Model model, LinkedInProfile basicProf, LinkedinUser user) {
         try {
-            linkedinService.setApi(access_token);
-            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            String emailAdd = basicProf.getEmailAddress();
+            String name = linkedinService.getLinkedInProfile().getFirstName()+' '+linkedinService.getLinkedInProfile().getLastName();
+            String profilePhoto = linkedinService.getLinkedInProfile().getProfilePictureUrl();
+            String headLine = linkedinService.getLinkedInProfile().getHeadline();
+            String summary  = linkedinService.getLinkedInProfile().getSummary();
             // UTILITY TO INSERT USER
-//            linkedinService.insertUser();
-            user = linkedinService.findUser("Harshank Vengurlekar");
 
-            // WORKING - Get photo URL
-//            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
-//            List<String> skillSet = linkedinService.getSkillSet();
-//            List<Education> educationsList = linkedinService.getEducations();
-
-            if(user!=null) {
+            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
                 String profilePhotoUrl = user.getProfilePhotoUrl();
                 List<String> skillSet = user.getSkillSet();
                 List<Educations> educationsList = user.getEducation();
@@ -223,7 +219,7 @@ public class MainController {
                 model.addAttribute("summary", user.getSummary());
                 model.addAttribute("courses", courses);
                 model.addAttribute("positions", user.getPositions());
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -253,7 +249,8 @@ public class MainController {
 //    @ResponseBody
     public String recommendCourses(Model model) {
         try {
-//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
             List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             HashMap<String, ArrayList<Integer>> userCourseMap = courseraService.fetchCoursesOfUser(user.getEmail());
 
@@ -291,13 +288,10 @@ public class MainController {
     public String recommendJobs(Model model) {
         try {
 //            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
             List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             List<JobSearchResult> recommendedJobs = recommendJobs(skillsByPopularity);
-
-            System.out.println("CAREERBUILDER:");
-            for(JobSearchResult job : recommendedJobs) {
-                System.out.println(job.getCompany());
-            }
 
             model.addAttribute("jobs", recommendedJobs);
 //            return recommendedJobs;
