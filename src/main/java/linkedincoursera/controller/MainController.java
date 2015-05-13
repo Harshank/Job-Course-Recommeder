@@ -60,8 +60,18 @@ public class MainController {
 
     @RequestMapping("/")
     public String index() {
+//        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_emailaddress";
+//        return "redirect:"+url;
+            return "login";
+    }
+    @RequestMapping("/signin")
+    public String signin() {
         String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_emailaddress";
         return "redirect:"+url;
+    }
+    @RequestMapping("/signout")
+    public String signout() {
+        return "login";
     }
     @RequestMapping("/login")
     public String login() {

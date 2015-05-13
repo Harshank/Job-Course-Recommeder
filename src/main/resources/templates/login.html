@@ -58,19 +58,10 @@
 							<hr />
 
 							<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
-							<form method="post" action="#" th:action="@{/login}">
+							<form method="post" action="#" th:action="@{/signin}">
 
 								<div class="top-margin">
-									<label>Username <span class="text-danger">*</span></label>
-									<input type="text" class="form-control" name="userName" />
-								</div>
-								<div class="top-margin">
-									<label>Password <span class="text-danger">*</span></label>
-									<input type="password" class="form-control" name="password" />
-								</div>
-
 								<hr />
-
 								<div class="row">
 									<div class="col-lg-4 text-right">
 										<button class="btn btn-action" type="submit">Sign in</button>
