@@ -20,6 +20,7 @@ public class Course {
     private int startYear;
     private int startDay;
     private String durationString;
+    private String savedCourse;
 
     public Integer getId() {
         return id;
@@ -131,5 +132,13 @@ public class Course {
 
     public void setDurationString(String durationString) {
         this.durationString = durationString;
+    }
+
+    public String getSavedCourse() {
+        return savedCourse;
+    }
+
+    public void setSavedCourse(String savedCourse) {
+        this.savedCourse = savedCourse;
     }
 }

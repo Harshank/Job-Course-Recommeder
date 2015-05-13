@@ -14,13 +14,17 @@ import linkedincoursera.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.social.linkedin.api.Education;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -56,7 +60,7 @@ public class MainController {
         String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
         return "redirect:"+url;
     }
-    private static LinkedinUser user = new LinkedinUser();
+    private LinkedinUser user = new LinkedinUser();
     @RequestMapping("/login")
     public String login() {
         return "greeting";
@@ -194,9 +198,8 @@ public class MainController {
         try {
             linkedinService.setApi(access_token);
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
-
             // UTILITY TO INSERT USER
-            linkedinService.insertUser();
+//            linkedinService.insertUser();
             user = linkedinService.findUser("Harshank Vengurlekar");
 
             // WORKING - Get photo URL
@@ -204,24 +207,46 @@ public class MainController {
 //            List<String> skillSet = linkedinService.getSkillSet();
 //            List<Education> educationsList = linkedinService.getEducations();
 
-            String profilePhotoUrl = user.getProfilePhotoUrl();
-            List<String> skillSet = user.getSkillSet();
-            List<Educations> educationsList = user.getEducation();
-            List<Course> courses = courseraService.fetchCourses();
-            List<Categories> categoryList = courseraService.getCategoriesList();
+            if(user!=null) {
+                String profilePhotoUrl = user.getProfilePhotoUrl();
+                List<String> skillSet = user.getSkillSet();
+                List<Educations> educationsList = user.getEducation();
+                List<Course> courses = courseraService.fetchCourses();
+                List<Categories> categoryList = courseraService.getCategoriesList();
 
 //            model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
-            model.addAttribute("userName", user.getUserName());
-            model.addAttribute("profilePhotoUrl", profilePhotoUrl);
-            model.addAttribute("education", educationsList);
-            model.addAttribute("headline", user.getHeadline());
-            model.addAttribute("skills", skillSet);
-            model.addAttribute("summary", user.getSummary());
-            model.addAttribute("courses", courses);
-            model.addAttribute("positions", user.getPositions());
+                model.addAttribute("userName", user.getUserName());
+                model.addAttribute("profilePhotoUrl", profilePhotoUrl);
+                model.addAttribute("education", educationsList);
+                model.addAttribute("headline", user.getHeadline());
+                model.addAttribute("skills", skillSet);
+                model.addAttribute("summary", user.getSummary());
+                model.addAttribute("courses", courses);
+                model.addAttribute("positions", user.getPositions());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @RequestMapping(value ="/courses/{userEmail}/save", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> saveMyCourse(@RequestBody Course course, @PathVariable String userEmail) {
+        System.out.println(course.getName());
+        try {
+            courseraService.saveCourse(course, userEmail);
+            return new ResponseEntity<String>(HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    @RequestMapping(value ="/courses/{userEmail}/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<String> deleteMyCourse(@PathVariable String userEmail, @PathVariable Integer id) {
+        courseraService.deleteCourse(id, userEmail);
+        return new ResponseEntity<String>(HttpStatus.OK);
+
     }
 
     @RequestMapping(value ="/recommendations/courses", method=RequestMethod.GET)
@@ -230,6 +255,7 @@ public class MainController {
         try {
 //            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
             List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
+            HashMap<String, ArrayList<Integer>> userCourseMap = courseraService.fetchCoursesOfUser(user.getEmail());
 
             List<Course> recommendedCoursera = recommendCoursera(skillsByPopularity);
             List<UdacityCourse> recommendedUdacity = recommendUdacity(skillsByPopularity);
@@ -240,11 +266,15 @@ public class MainController {
             for (Course course : recommendedCoursera) {
                 if(course.getStartDay() == 0 && course.getStartMonth()==0 && course.getStartYear()==0)
                     recommendedCoursera.remove(course);
+                if(userCourseMap!=null && userCourseMap.get(user.getEmail())!=null && userCourseMap.get(user.getEmail()).contains(course.getId())) {
+                    course.setSavedCourse("true");
+                }
             }
 //            System.out.println("UDACITY:");
 //            for(UdacityCourse course : recommendedUdacity) {
 //                System.out.println(course.getTitle());
 //            }
+            model.addAttribute("userEmail", user.getEmail());
             model.addAttribute("courseraCourses",recommendedCoursera);
             model.addAttribute("udacityCourses",recommendedUdacity);
 //            model.addAttribute("courses", allCourses);

@@ -1,13 +1,18 @@
 package linkedincoursera.services;
 
 import linkedincoursera.model.coursera.*;
+import linkedincoursera.repository.CourseraRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,7 +20,8 @@ import java.util.List;
  */
 @Component
 public class CourseraService {
-
+    @Autowired
+    CourseraRepo courseraRepo;
     public RestTemplate restTemplate = new RestTemplate();
 
     public List<Course> fetchCourses() throws Exception {
@@ -121,5 +127,19 @@ public class CourseraService {
 
     public void filterCourses(String searchParam) {
 
+    }
+
+    public void saveCourse(Course course, String email) throws IOException {
+        courseraRepo.saveCourse(course, email);
+    }
+
+    public void deleteCourse(Integer id, String userEmail) {
+        courseraRepo.deleteCourse(id, userEmail);
+    }
+
+    public HashMap<String, ArrayList<Integer>> fetchCoursesOfUser(String email) {
+        HashMap<String, ArrayList<Integer>> hm = new HashMap<String, ArrayList<Integer>>();
+        hm.put(email, courseraRepo.fetchCoursesOfUser(email));
+        return hm;
     }
 }
