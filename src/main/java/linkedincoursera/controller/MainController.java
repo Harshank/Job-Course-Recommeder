@@ -203,10 +203,10 @@ public class MainController {
         linkedinService.setApi(access_token);
         LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
         LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
-        //if(user!=null) {
+        if(user!=null) {
             response.addCookie(new Cookie("userEmail",basicProf.getEmailAddress()));
             getDetails(model, basicProf, user);
-        //}
+        }
         return "dashboard";
     }
 

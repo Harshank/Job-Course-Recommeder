@@ -18,6 +18,8 @@ public class LinkedinUser implements Serializable {
     private String summary;
     private String email;
     private List<Positions> positions;
+    private String city;
+    private String state;
     public LinkedinUser() {}
     public LinkedinUser(String userName, String profilePhotoUrl, List<Educations> education, String headline, List<String> skillSet, String summary, String email, List<Positions> positions) {
         this.userName = userName;
@@ -91,5 +93,21 @@ public class LinkedinUser implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
