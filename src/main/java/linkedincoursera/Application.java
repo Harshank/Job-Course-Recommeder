@@ -2,6 +2,7 @@ package linkedincoursera;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import linkedincoursera.messenging.EmailSender;
 import linkedincoursera.messenging.KafkaConsumer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -29,6 +30,9 @@ public class Application {
     KafkaConsumer consumer() {
         return new KafkaConsumer();
     }
+
+    @Bean
+    EmailSender emailSender() { return new EmailSender(); }
 
     @Bean
     MongoClient client() throws UnknownHostException {

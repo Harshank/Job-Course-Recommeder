@@ -1,5 +1,6 @@
 package linkedincoursera.repository;
 
+import linkedincoursera.model.coursera.UserCourse;
 import linkedincoursera.model.coursera.UserCourseList;
 import linkedincoursera.util.DBConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,10 +19,10 @@ public class UserCourseRepo {
     }
 
     public List<UserCourseList> getUserCourseList(String id) {
-        return mongoTemplate.find(new Query(Criteria.where("id").is(id)), UserCourseList.class);
+        return mongoTemplate.find(new Query(Criteria.where("id").is(id)), UserCourseList.class, "userCourses");
     }
 
-    public List<UserCourseList> findAll() {
-        return mongoTemplate.findAll(UserCourseList.class);
+    public List<UserCourse> findAll() {
+        return mongoTemplate.findAll(UserCourse.class, "userCourses");
     }
 }
