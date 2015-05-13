@@ -18,6 +18,7 @@ public class UdacityCourse {
     private String image;
     private String banner_image;
     private List<String> tracks;
+    private String savedCourse;
 
     public String getKey() {
         return key;
@@ -105,6 +106,14 @@ public class UdacityCourse {
 
     public void setBanner_image(String banner_image) {
         this.banner_image = banner_image;
+    }
+
+    public String getSavedCourse() {
+        return savedCourse;
+    }
+
+    public void setSavedCourse(String savedCourse) {
+        this.savedCourse = savedCourse;
     }
 }
 

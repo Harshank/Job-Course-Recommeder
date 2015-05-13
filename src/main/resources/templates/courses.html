@@ -26,8 +26,9 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
     <![endif]-->
 </head>
 
@@ -57,7 +58,7 @@
                 <th>Description</th>
                 <th>Homepage</th>
                 <!--<th>Start Date</th>-->
-                <th>Create Alert</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -71,8 +72,9 @@
                 <td th:text="${course.shortDescription}"></td>
                 <td ><a th:href="@{${course.homeLink}}" ><p th:text="${course.homeLink}" style="font-size:15px;"></p></a></td>
                 <!--<td th:text="${course.startDay}+' '+ ${course.startMonth}+' '+ ${course.startYear}"></td>-->
-
-                <td><input type="checkbox"/></td>
+                <td>
+                    <input type="checkbox" th:checked="${course.savedCourse}" th:id="${course.id}+'_cb'" th:onchange="'javascript:saveCourse(\'' + ${course.id} + '\',\'' + ${course.name} + '\',\'' + ${course.homeLink} + '\',\'' + ${course.instructor} + '\',\'' + ${userEmail} + '\',\'' + ${course.startDay} + '\',\'' + ${course.startMonth} + '\',\'' + ${course.startYear} + '\');'" />
+                </td>
             </tr>
             </tbody>
 
@@ -110,6 +112,44 @@
         </table>
     </div>
 </div>
-
+<script th:inline="javascript">
+    var course = [[${courseraCourses}]];
+    console.log(course);
+    function saveCourse(id, name, link, instructor, userEmail, day, month, year) {
+        console.log(day+' '+month);
+        if($("#"+id+"_cb").is( ":checked" )) {
+            $.ajax({
+                type:"POST",
+                url: "/courses/"+userEmail+"/save",
+                data: JSON.stringify({
+                    "id": id,
+                    "name": name,
+                    "homeLink": link,
+                    "instructor": instructor,
+                    "startDay":day,
+                    "startMonth": month,
+                    "startYear": year
+                }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                },
+                error: function (e) {
+                }
+            });
+        } else if(!$("#"+id+"_cb").is( ":checked" )) {
+            $.ajax({
+                type:"DELETE",
+                url: "/courses/"+userEmail+"/"+id,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                },
+                error: function (e) {
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>

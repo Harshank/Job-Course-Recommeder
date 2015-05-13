@@ -1,12 +1,12 @@
 package linkedincoursera.repository;
 
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import linkedincoursera.model.coursera.Categories;
 import linkedincoursera.model.coursera.Course;
+import linkedincoursera.util.MongoConnection;
+import org.bson.BSONDecoder;
+import org.bson.BSONObject;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,7 +15,10 @@ import linkedincoursera.util.DBConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -74,5 +77,48 @@ public class CourseraRepo {
 
     public List<Course> findCourses(Query query) {
         return mongoTemplate.find(query, Course.class);
+    }
+
+    public void saveCourse(Course course, String email) throws IOException {
+        BasicDBObject document = new BasicDBObject();
+            DB db = MongoConnection.getConnection();
+            DBCollection collection = db.getCollection("userCourses");
+            document.put("id",course.getId());
+            document.put("name",course.getName());
+            document.put("homeLink",course.getHomeLink());
+            document.put("instructor",course.getInstructor());
+            document.put("userEmail",email);
+            document.put("startDay",course.getStartDay());
+            document.put("startMonth",course.getStartMonth());
+            document.put("startYear",course.getStartYear());
+            collection.insert(document);
+
+
+    }
+
+    public void deleteCourse(Integer id, String userEmail) {
+        Query query = new Query(Criteria.where("id").is(id).and("userEmail").is(userEmail));
+        mongoTemplate.remove(query, "userCourses");
+
+    }
+
+    public ArrayList<Integer> fetchCoursesOfUser(String email) {
+        DB db = null;
+        ArrayList<Integer> al = new ArrayList<Integer>();
+        try {
+            db = MongoConnection.getConnection();
+            DBCollection collection = db.getCollection("userCourses");
+            BasicDBObject query = new BasicDBObject();
+            query.put("userEmail", email);
+            DBCursor dbCursor = collection.find(query);
+            System.out.println(dbCursor.count());
+            while(dbCursor.hasNext()) {
+                al.add((Integer) dbCursor.next().get("id"));
+            }
+            System.out.println(al);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return al;
     }
 }
