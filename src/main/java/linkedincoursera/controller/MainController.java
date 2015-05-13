@@ -69,12 +69,7 @@ public class MainController {
         getDetails(model);
         return "courses";
     }
-    @RequestMapping("/main")
-    public String homepage(Model model) {
-        getDetails(model);
-        return "main";
-    }
-    @RequestMapping("/dasboard")
+    @RequestMapping("/dashboard")
     public String homepage(Model model) {
         getDetails(model);
         return "dashboard";
@@ -157,7 +152,10 @@ public class MainController {
 
             for(String skill : skillSet) {
                 List<JobSearchResult> jobSearchResults = careerBuilderService.fetchJobs(skill);
-                jobs.addAll(jobSearchResults);
+                for(JobSearchResult job:jobSearchResults) {
+                    if(job.getCompany()!=null)
+                        jobs.add(job);
+                }
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
@@ -218,22 +216,21 @@ public class MainController {
         try {
             List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
 
-            ArrayList allCourses = new ArrayList();
             List<Course> recommendedCoursera = recommendCoursera(skillsByPopularity);
             List<UdacityCourse> recommendedUdacity = recommendUdacity(skillsByPopularity);
-            allCourses.addAll(recommendedCoursera);
-            allCourses.addAll(recommendedUdacity);
-
-            System.out.println("COURSERA:");
+//            ArrayList allCourses = new ArrayList();
+//            allCourses.addAll(recommendedCoursera);
+//            allCourses.addAll(recommendedUdacity);
+//            System.out.println("COURSERA:");
             for (Course course : recommendedCoursera) {
-                System.out.println(course.getName());
+                if(course.getStartDay() == 0 && course.getStartMonth()==0 && course.getStartYear()==0)
+                    recommendedCoursera.remove(course);
             }
-
-            System.out.println("UDACITY:");
-            for(UdacityCourse course : recommendedUdacity) {
-                System.out.println(course.getTitle());
-            }
-            model.addAttribute("courseraCourses",recommendedUdacity);
+//            System.out.println("UDACITY:");
+//            for(UdacityCourse course : recommendedUdacity) {
+//                System.out.println(course.getTitle());
+//            }
+            model.addAttribute("courseraCourses",recommendedCoursera);
             model.addAttribute("udacityCourses",recommendedUdacity);
 //            model.addAttribute("courses", allCourses);
 //            return allCourses;
@@ -253,7 +250,7 @@ public class MainController {
 
             System.out.println("CAREERBUILDER:");
             for(JobSearchResult job : recommendedJobs) {
-                System.out.println(job.getJobTitle());
+                System.out.println(job.getCompany());
             }
 
             model.addAttribute("jobs", recommendedJobs);

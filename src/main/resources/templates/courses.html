@@ -39,22 +39,67 @@
 </ul>
 <div class="jumbotron">
     <div class="container">
+
         <h1>Recommended Courses</h1>
         <a href="/email" class="btn btn-dark btn-lg">Email Details</a>
+
         <!-- Table -->
         <table class="table" >
             <thead>
             <tr>
-                <th>Course ID</th>
+                <!--<th>Course ID</th>-->
+                <th></th>
+                <th>ID</th>
                 <th>Course Name</th>
-                <th>Course Short Name</th>
+                <!--<th>Short Name</th>-->
+                <th>Instructor</th>
+                <th>Description</th>
+                <th>Homepage</th>
+                <!--<th>Start Date</th>-->
+                <th>Create Alert</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="course : ${courses}">
+            <tr th:each="course : ${courseraCourses}">
+                <td><img class="img-circle" th:src="${course.photo}" width="150" /></td>
                 <td th:text="${course.id}"></td>
-                <td><a href="#" th:text="${course.name}"></a></td>
-                <td th:text="${course.shortName}"></td>
+                <td th:text="${course.name}"></td>
+                <!--<td th:text="${course.shortName}"></td>-->
+                <!--<td th:text="${course.shortDescription}"></td>-->
+                <td th:text="${course.instructor}"></td>
+                <td th:text="${course.shortDescription}"></td>
+                <td ><a th:href="@{${course.homeLink}}" ><p th:text="${course.homeLink}" style="font-size:15px;"></p></a></td>
+                <!--<td th:text="${course.startDay}+' '+ ${course.startMonth}+' '+ ${course.startYear}"></td>-->
+
+                <td><input type="checkbox"/></td>
+            </tr>
+            </tbody>
+
+        </table>
+        <table class="table" >
+            <thead>
+            <tr>
+                <th></th>
+                <th>Course Key</th>
+                <th>Course Name</th>
+                <th>Short Name</th>
+                <th>Summary</th>
+                <!--<th>Tracks</th>-->
+                <th>Homepage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${udacityCourses}">
+                <td><img class="img-circle" th:src="${course.image}" width="150" /></td>
+                <td th:text="${course.key}"></td>
+                <td th:text="${course.title}"></td>
+                <td th:text="${course.subtitle}"></td>
+                <td th:text="${course.short_summary}"></td>
+                <!--<td th:text="${course.summary}"></td>-->
+                <!--<td th:text="${course.expected_learning}"></td>-->
+                <!--<td th:text="${course.syllabus}"></td>-->
+                <!--<td th:text="${course.tracks}"></td>-->
+                <td ><a th:href="@{${course.homepage}}" ><p th:text="${course.homepage}" style="font-size:15px;"></p></a></td>
                 <br>
             </tr>
             </tbody>

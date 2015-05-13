@@ -32,22 +32,35 @@
 </head>
 
 <body>
+<div>
 <ul class="nav nav-pills">
     <li role="presentation"><a href="/dashboard">Home</a></li>
     <li role="presentation" class="active"><a href="/recommendations/jobs">Jobs</a></li>
     <li role="presentation"><a href="/recommendations/courses">Courses</a></li>
 </ul>
+</div>
 <div class="jumbotron">
     <div class="container">
+
         <h1>Jobs</h1>
         <!-- Table -->
         <a href="/email" class="btn btn-dark btn-lg">Email Details</a>
+
         <table class="table" >
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Locations</th>
+                <th>Apply</th>
+            </tr>
+            </thead>
             <tbody>
             <tr th:each="job: ${jobs}">
+                <td th:text="${job.jobTitle}"></td>
                 <td th:text="${job.company}"></td>
-                <td><a href="#" th:text="${job.description}"></a></td>
                 <td th:text="${job.location}"></td>
+                <td ><a th:href="@{${job.jobDetailsURL}}" ><p th:text="${job.jobDetailsURL}" style="font-size:15px;"></p></a></td>
                 <br>
             </tr>
             </tbody>

@@ -15,6 +15,8 @@ public class UdacityCourse {
     private String summary;
     private String expected_learning;
     private String syllabus;
+    private String image;
+    private String banner_image;
     private List<String> tracks;
 
     public String getKey() {
@@ -89,5 +91,20 @@ public class UdacityCourse {
         this.tracks = tracks;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getBanner_image() {
+        return banner_image;
+    }
+
+    public void setBanner_image(String banner_image) {
+        this.banner_image = banner_image;
+    }
 }
 
