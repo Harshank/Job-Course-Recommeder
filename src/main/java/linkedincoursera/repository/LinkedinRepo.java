@@ -20,7 +20,9 @@ public class LinkedinRepo {
     public void insertLinkedUser(LinkedinUser user) {
         mongoTemplate.insert(user,"linkedindb");
     }
-    public List<LinkedinUser> findUser(String username) {
-        return mongoTemplate.find(new Query(Criteria.where("userName").is(username)),LinkedinUser.class,"linkedindb");
+    public  List<LinkedinUser> findUser(String username) {
+        List<LinkedinUser> list = mongoTemplate.find(new Query(Criteria.where("userName").is(username)),LinkedinUser.class,"linkedindb");
+        if(list.size()>0) return list;
+        else return null;
     }
 }

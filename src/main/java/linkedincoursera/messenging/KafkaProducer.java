@@ -37,7 +37,7 @@ public class KafkaProducer {
         this.producer = producer;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 86400000)
     public void sendMessage() {
         Calendar cal = Calendar.getInstance();
         int currentDayOfYear = cal.get(Calendar.DAY_OF_YEAR);
