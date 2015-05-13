@@ -70,8 +70,6 @@ public class CourseraService {
                 e.printStackTrace();
             }
         }
-
-
     }
 
     private void getHomeLinkFromSession(Integer sessionId, Course c) throws Exception {

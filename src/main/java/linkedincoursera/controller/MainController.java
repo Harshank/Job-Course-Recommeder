@@ -13,6 +13,7 @@ import linkedincoursera.repository.UdacityRepo;
 import linkedincoursera.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @PropertySource(value = {"classpath:/properties/application.properties"},ignoreResourceNotFound = false)
@@ -53,37 +55,22 @@ public class MainController {
     @Autowired
     public UdacityRepo udacityRepo;
 
-    static String access_token="";
+    private String access_token="";
 
     @RequestMapping("/")
     public String index() {
-        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
+        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_emailaddress";
         return "redirect:"+url;
     }
-    private LinkedinUser user = new LinkedinUser();
     @RequestMapping("/login")
     public String login() {
         return "greeting";
     }
-    @RequestMapping("/jobs")
-    public String jobpage(Model model) {
-        getDetails(model);
-        return "job";
-    }
-    @RequestMapping("/courses")
-    public String coursespage(Model model) {
-        getDetails(model);
-        return "courses";
-    }
     @RequestMapping("/dashboard")
-    public String homepage(Model model) {
-        getDetails(model);
-        return "dashboard";
-    }
-    @RequestMapping("/auth/linkedin")
-    public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
-        access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
-        getDetails(model);
+    public String homepage(Model model, HttpServletRequest request,HttpServletResponse response) {
+        LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+        LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
+        getDetails(model, basicProf, user);
         return "dashboard";
     }
     @RequestMapping("/recommendation")
@@ -132,7 +119,7 @@ public class MainController {
             if(skillSet.size() > 3) {
                 skillSet = skillSet.subList(0, 3);
             }
-
+            System.out.println(skillSet);
             for(String skill : skillSet) {
                 List<UdacityCourse> udacityCourses = udacityService.fetchCourses();
                 List<UdacityCourse> filteredUdacityCourses = UdacityService.searchCourses(udacityCourses, skill);
@@ -150,7 +137,7 @@ public class MainController {
 
     public List<JobSearchResult> recommendJobs(List<String> skillSet) {
         List<JobSearchResult> jobs = new ArrayList<JobSearchResult>();
-
+        HashSet<JobSearchResult> recoJobs = new HashSet<JobSearchResult>();
         try {
             if(skillSet.size() > 3) {
                 skillSet = skillSet.subList(0, 3);
@@ -166,11 +153,14 @@ public class MainController {
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
-        if(jobs.size() > 10) {
-            jobs = jobs.subList(0, 10);
+        for(JobSearchResult job:jobs) {
+            recoJobs.add(job);
         }
-
-        return jobs;
+        List<JobSearchResult> resultJobs = new ArrayList<JobSearchResult>(recoJobs);
+        if(resultJobs.size() > 10) {
+            resultJobs = resultJobs.subList(0, 20);
+        }
+        return resultJobs;
     }
 
     public ArrayList<String> listSkillsByPopularity(List<String> skillSet) {
@@ -193,21 +183,29 @@ public class MainController {
         }
         return orderedSkillSet;
     }
+    @RequestMapping("/auth/linkedin")
+    public String authenticate(Model model, @RequestParam String code, @RequestParam String state, HttpServletResponse response) {
+        access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
+        linkedinService.setApi(access_token);
+        LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+        LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
+        if(user!=null) {
+            response.addCookie(new Cookie("userEmail",basicProf.getEmailAddress()));
+            getDetails(model, basicProf, user);
+        }
+        return "dashboard";
+    }
 
-    public void getDetails(Model model) {
+    public void getDetails(Model model, LinkedInProfile basicProf, LinkedinUser user) {
         try {
-            linkedinService.setApi(access_token);
-            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            String emailAdd = basicProf.getEmailAddress();
+            String name = linkedinService.getLinkedInProfile().getFirstName()+' '+linkedinService.getLinkedInProfile().getLastName();
+            String profilePhoto = linkedinService.getLinkedInProfile().getProfilePictureUrl();
+            String headLine = linkedinService.getLinkedInProfile().getHeadline();
+            String summary  = linkedinService.getLinkedInProfile().getSummary();
             // UTILITY TO INSERT USER
-//            linkedinService.insertUser();
-            user = linkedinService.findUser("Harshank Vengurlekar");
 
-            // WORKING - Get photo URL
-//            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
-//            List<String> skillSet = linkedinService.getSkillSet();
-//            List<Education> educationsList = linkedinService.getEducations();
-
-            if(user!=null) {
+//            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
                 String profilePhotoUrl = user.getProfilePhotoUrl();
                 List<String> skillSet = user.getSkillSet();
                 List<Educations> educationsList = user.getEducation();
@@ -223,7 +221,7 @@ public class MainController {
                 model.addAttribute("summary", user.getSummary());
                 model.addAttribute("courses", courses);
                 model.addAttribute("positions", user.getPositions());
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -253,12 +251,14 @@ public class MainController {
 //    @ResponseBody
     public String recommendCourses(Model model) {
         try {
-//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
             List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             HashMap<String, ArrayList<Integer>> userCourseMap = courseraService.fetchCoursesOfUser(user.getEmail());
 
             List<Course> recommendedCoursera = recommendCoursera(skillsByPopularity);
             List<UdacityCourse> recommendedUdacity = recommendUdacity(skillsByPopularity);
+            System.out.println(recommendedUdacity);
 //            ArrayList allCourses = new ArrayList();
 //            allCourses.addAll(recommendedCoursera);
 //            allCourses.addAll(recommendedUdacity);
@@ -291,13 +291,10 @@ public class MainController {
     public String recommendJobs(Model model) {
         try {
 //            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
+            LinkedinUser user = linkedinService.findUserByEmail(basicProf.getEmailAddress());
             List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             List<JobSearchResult> recommendedJobs = recommendJobs(skillsByPopularity);
-
-            System.out.println("CAREERBUILDER:");
-            for(JobSearchResult job : recommendedJobs) {
-                System.out.println(job.getCompany());
-            }
 
             model.addAttribute("jobs", recommendedJobs);
 //            return recommendedJobs;

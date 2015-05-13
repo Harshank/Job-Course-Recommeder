@@ -26,13 +26,13 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    KafkaConsumer consumer() {
-        return new KafkaConsumer();
-    }
+//    @Bean
+//    KafkaConsumer consumer() {
+//        return new KafkaConsumer();
+//    }
 
-    @Bean
-    EmailSender emailSender() { return new EmailSender(); }
+//    @Bean
+//    EmailSender emailSender() { return new EmailSender(); }
 
     @Bean
     MongoClient client() throws UnknownHostException {

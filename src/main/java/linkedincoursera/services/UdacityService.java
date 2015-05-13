@@ -38,7 +38,7 @@ public class UdacityService {
     public static List<UdacityCourse> searchCourses(List<UdacityCourse> courses, String queryValue) {
         ArrayList<UdacityCourse> filteredCourses = new ArrayList<UdacityCourse>();
         for(UdacityCourse course : courses) {
-            if(course.getTitle().contains(queryValue) || course.getSummary().contains(queryValue)) {
+            if(course.getTitle().toLowerCase().contains(queryValue) || course.getSummary().toLowerCase().contains(queryValue) || course.getShort_summary().toLowerCase().contains(queryValue)) {
                 filteredCourses.add(course);
             }
         }

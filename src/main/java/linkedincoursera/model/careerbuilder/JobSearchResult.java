@@ -110,4 +110,18 @@ public class JobSearchResult {
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
+
+    public boolean equals(Object obj) {
+        if (obj == this) { return true; }
+        if (obj == null || obj.getClass() != this.getClass()) { return false; }
+        JobSearchResult guest = (JobSearchResult) obj;
+        return jobTitle.equals(guest.jobTitle);
+    }
+    public int hashCode() {
+        return jobTitle.length();
+    }
+    public String toString() {
+        return jobTitle;
+    }
+
 }
