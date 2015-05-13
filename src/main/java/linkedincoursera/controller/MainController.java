@@ -51,7 +51,7 @@ public class MainController {
 
     @RequestMapping("/")
     public String index() {
-        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_fullprofile";
+        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
         return "redirect:"+url;
     }
 
