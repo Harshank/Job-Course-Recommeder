@@ -41,6 +41,7 @@ dependencies {
     compile("org.apache.kafka:kafka_2.10:0.8.2.0")
     compile 'javax.mail:mail:1.4.1'
     compile 'javax.activation:activation:1.1'
+    compile ("net.sourceforge.nekohtml:nekohtml:1.9.21")
 }
 
 configurations.all {

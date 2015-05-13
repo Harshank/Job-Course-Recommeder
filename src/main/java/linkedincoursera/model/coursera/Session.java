@@ -5,10 +5,11 @@ package linkedincoursera.model.coursera;
  */
 public class Session {
     private int id;
-    private String homelink;
-    private int startDay;
+    private String homeLink;
     private int startMonth;
     private int startYear;
+    private int startDay;
+    private String durationString;
 
     public int getId() {
         return id;
@@ -17,18 +18,6 @@ public class Session {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getHomelink() {
-        return homelink;
-    }
-
-    public void setHomelink(String homelink) {
-        this.homelink = homelink;
-    }
-
-    public int getStartDay() { return startDay; }
-
-    public void setStartDay(int startDay) { this.startDay = startDay; }
 
     public int getStartMonth() {
         return startMonth;
@@ -44,5 +33,29 @@ public class Session {
 
     public void setStartYear(int startYear) {
         this.startYear = startYear;
+    }
+
+    public String getHomeLink() {
+        return homeLink;
+    }
+
+    public void setHomeLink(String homeLink) {
+        this.homeLink = homeLink;
+    }
+
+    public int getStartDay() {
+        return startDay;
+    }
+
+    public void setStartDay(int startDay) {
+        this.startDay = startDay;
+    }
+
+    public String getDurationString() {
+        return durationString;
+    }
+
+    public void setDurationString(String durationString) {
+        this.durationString = durationString;
     }
 }

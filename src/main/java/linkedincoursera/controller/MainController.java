@@ -4,6 +4,8 @@ package linkedincoursera.controller;
 import linkedincoursera.model.careerbuilder.JobSearchResult;
 import linkedincoursera.model.coursera.Categories;
 import linkedincoursera.model.coursera.Course;
+import linkedincoursera.model.linkedin.Educations;
+import linkedincoursera.model.linkedin.LinkedinUser;
 import linkedincoursera.model.stackoverflow.QuestionCountSOF;
 import linkedincoursera.model.udacity.UdacityCourse;
 import linkedincoursera.repository.CourseraRepo;
@@ -51,25 +53,34 @@ public class MainController {
 
     @RequestMapping("/")
     public String index() {
-        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_fullprofile";
+        String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
         return "redirect:"+url;
     }
-
+    private static LinkedinUser user = new LinkedinUser();
     @RequestMapping("/login")
     public String login() {
         return "greeting";
     }
-    @RequestMapping("/main")
+    @RequestMapping("/jobs")
+    public String jobpage(Model model) {
+        getDetails(model);
+        return "job";
+    }
+    @RequestMapping("/courses")
+    public String coursespage(Model model) {
+        getDetails(model);
+        return "courses";
+    }
+    @RequestMapping("/dashboard")
     public String homepage(Model model) {
         getDetails(model);
-        return "main";
+        return "dashboard";
     }
-
     @RequestMapping("/auth/linkedin")
     public String authenticate(Model model, @RequestParam String code, @RequestParam String state) {
         access_token = authService.authorizeLinkedinByPost(code, redirect_uri, apikey, apisecret);
         getDetails(model);
-        return "main";
+        return "dashboard";
     }
     @RequestMapping("/recommendation")
     public String recommendScreen(Model model) {
@@ -143,7 +154,10 @@ public class MainController {
 
             for(String skill : skillSet) {
                 List<JobSearchResult> jobSearchResults = careerBuilderService.fetchJobs(skill);
-                jobs.addAll(jobSearchResults);
+                for(JobSearchResult job:jobSearchResults) {
+                    if(job.getCompany()!=null)
+                        jobs.add(job);
+                }
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
@@ -180,71 +194,85 @@ public class MainController {
         try {
             linkedinService.setApi(access_token);
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
-            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
-            List<String> skillSet = linkedinService.getSkillSet();
-            List<Education> educationsList = linkedinService.getEducations();
+
+            // UTILITY TO INSERT USER
+//            linkedinService.insertUser();
+            user = linkedinService.findUser("Harshank Vengurlekar");
+//            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
+//            List<String> skillSet = linkedinService.getSkillSet();
+//            List<Education> educationsList = linkedinService.getEducations();
+
+            String profilePhotoUrl = user.getProfilePhotoUrl();
+            List<String> skillSet = user.getSkillSet();
+            List<Educations> educationsList = user.getEducation();
             List<Course> courses = courseraService.fetchCourses();
             List<Categories> categoryList = courseraService.getCategoriesList();
 
-            model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+//            model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+            model.addAttribute("userName", user.getUserName());
             model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
+            model.addAttribute("headline", user.getHeadline());
             model.addAttribute("skills", skillSet);
-            model.addAttribute("summary", linkedinService.getLinkedInProfile().getSummary());
+            model.addAttribute("summary", user.getSummary());
             model.addAttribute("courses", courses);
-            model.addAttribute("positions", linkedinService.getLinkedInProfileFull().getPositions());
+            model.addAttribute("positions", user.getPositions());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @RequestMapping(value ="/recommendations/courses", method=RequestMethod.GET)
-    @ResponseBody
-    public List recommendCourses(Model model) {
+//    @ResponseBody
+    public String recommendCourses(Model model) {
         try {
-            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
 
-            ArrayList allCourses = new ArrayList();
             List<Course> recommendedCoursera = recommendCoursera(skillsByPopularity);
             List<UdacityCourse> recommendedUdacity = recommendUdacity(skillsByPopularity);
-            allCourses.addAll(recommendedCoursera);
-            allCourses.addAll(recommendedUdacity);
-
-            System.out.println("COURSERA:");
+//            ArrayList allCourses = new ArrayList();
+//            allCourses.addAll(recommendedCoursera);
+//            allCourses.addAll(recommendedUdacity);
+//            System.out.println("COURSERA:");
             for (Course course : recommendedCoursera) {
-                System.out.println(course.getName());
+                if(course.getStartDay() == 0 && course.getStartMonth()==0 && course.getStartYear()==0)
+                    recommendedCoursera.remove(course);
             }
-
-            System.out.println("UDACITY:");
-            for(UdacityCourse course : recommendedUdacity) {
-                System.out.println(course.getTitle());
-            }
-
-            model.addAttribute("courses", allCourses);
-            return allCourses;
+//            System.out.println("UDACITY:");
+//            for(UdacityCourse course : recommendedUdacity) {
+//                System.out.println(course.getTitle());
+//            }
+            model.addAttribute("courseraCourses",recommendedCoursera);
+            model.addAttribute("udacityCourses",recommendedUdacity);
+//            model.addAttribute("courses", allCourses);
+//            return allCourses;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList();
+//            return new ArrayList();
         }
+        return "courses";
     }
 
     @RequestMapping(value ="/recommendations/jobs", method=RequestMethod.GET)
-    @ResponseBody
-    public List recommendJobs(Model model) {
+//    @ResponseBody
+    public String recommendJobs(Model model) {
         try {
-            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             List<JobSearchResult> recommendedJobs = recommendJobs(skillsByPopularity);
 
             System.out.println("CAREERBUILDER:");
             for(JobSearchResult job : recommendedJobs) {
-                System.out.println(job.getJobTitle());
+                System.out.println(job.getCompany());
             }
 
             model.addAttribute("jobs", recommendedJobs);
-            return recommendedJobs;
+//            return recommendedJobs;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<JobSearchResult>();
+//            return new ArrayList<JobSearchResult>();
         }
+        return "job";
     }
 }

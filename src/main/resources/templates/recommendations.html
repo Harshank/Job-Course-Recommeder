@@ -72,13 +72,18 @@
 </div>
 </body>
 <body>
-<script th:inline="javascript">
-    var skills = [[${skills}]];
-    console.log(skills);
-    <div id ="courseDiv">
 
     </div>
-</script>
+    <h2>Jobs</h2>
+    <tr th:each="course : ${courseraCourses}">
+        <td th:text="${course.name}">1</td>
+        <td th:text="${course.photo}">T</td>
+        <td th:text="${course.shortDescription}"></td>
+        <td th:text="${course.instructor}"></td>
+        <td th:text="${course.previewLink}"></td>
+        <br />
+    </tr>
+
 <div id ="courseDiv">
 
 </div>
