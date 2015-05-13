@@ -215,8 +215,7 @@ public class MainController {
             String headLine = linkedinService.getLinkedInProfile().getHeadline();
             String summary  = linkedinService.getLinkedInProfile().getSummary();
             // UTILITY TO INSERT USER
-
-            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
+ //            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
                 String profilePhotoUrl = user.getProfilePhotoUrl();
             System.out.println(user.getProfilePhotoUrl());
                 List<String> skillSet = user.getSkillSet();
