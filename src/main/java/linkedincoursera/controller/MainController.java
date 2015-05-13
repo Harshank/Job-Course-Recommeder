@@ -56,7 +56,7 @@ public class MainController {
         String url = "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id="+apikey+"&redirect_uri="+redirect_uri+"&state=987654321&scope=r_basicprofile";
         return "redirect:"+url;
     }
-
+    private static LinkedinUser user = new LinkedinUser();
     @RequestMapping("/login")
     public String login() {
         return "greeting";
@@ -197,7 +197,7 @@ public class MainController {
 
             // UTILITY TO INSERT USER
 //            linkedinService.insertUser();
-            LinkedinUser user = linkedinService.findUser("Harshank Vengurlekar");
+            user = linkedinService.findUser("Harshank Vengurlekar");
 //            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
 //            List<String> skillSet = linkedinService.getSkillSet();
 //            List<Education> educationsList = linkedinService.getEducations();
@@ -226,7 +226,8 @@ public class MainController {
 //    @ResponseBody
     public String recommendCourses(Model model) {
         try {
-            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
 
             List<Course> recommendedCoursera = recommendCoursera(skillsByPopularity);
             List<UdacityCourse> recommendedUdacity = recommendUdacity(skillsByPopularity);
@@ -257,7 +258,8 @@ public class MainController {
 //    @ResponseBody
     public String recommendJobs(Model model) {
         try {
-            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+//            List<String> skillsByPopularity = listSkillsByPopularity(linkedinService.getSkillSet());
+            List<String> skillsByPopularity = listSkillsByPopularity(user.getSkillSet());
             List<JobSearchResult> recommendedJobs = recommendJobs(skillsByPopularity);
 
             System.out.println("CAREERBUILDER:");
