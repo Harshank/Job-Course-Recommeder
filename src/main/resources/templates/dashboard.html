@@ -61,29 +61,25 @@
             <h2 th:text=${userName}>"</h2>
             <h3>Headline:</h3> <p th:text="${headline}"></p>
             <h3>Summary :</h3> <p th:text="${summary}"></p>
-            <h3>Skills :</h3><p th:text="${skills}"></p>
+            <h3>Skills :</h3>
+            <span th:each="skill : ${skills}">
+                <span th:text="${skill}"></span>
+            </span>
             <h3>Work History</h3>
-            <table class="" align="center">
-                <tbody>
-                <tr th:each="pos : ${positions}">
-                    <p th:text="${pos.title}"></p>
-                    <p th:text="${pos.company.name}"></p>
-                    <br/>
-                </tr>
-                </tbody>
+            <span th:each="position : ${positions}">
+                <span th:text="${position.title}"></span>
+                <span>at</span>
+                <span th:text="${position.companyName}"></span>
+                <br />
+            </span>
 
-            </table>
             <h3>Education</h3>
-            <table class="" align="center">
-                <tbody>
-                <tr th:each="education : ${education}">
-                    <p th:text="${education.degree}"></p><p th:text="${education.fieldOfStudy}"> </p>
-                    <p th:text="${education.schoolName}"> </p>
-                    <br />
-                </tr>
-                </tbody>
-
-            </table>
+            <span th:each="education : ${education}">
+                <span th:text="${education.degree}"></span><span> in</span>
+                <span th:text="${education.fieldOfStudy}"></span><span> at </span>
+                <span th:text="${education.schoolName}"></span>
+                <br />
+            </span>
 
         </div>
     </div>

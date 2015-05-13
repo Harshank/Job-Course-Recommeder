@@ -4,6 +4,8 @@ package linkedincoursera.controller;
 import linkedincoursera.model.careerbuilder.JobSearchResult;
 import linkedincoursera.model.coursera.Categories;
 import linkedincoursera.model.coursera.Course;
+import linkedincoursera.model.linkedin.Educations;
+import linkedincoursera.model.linkedin.LinkedinUser;
 import linkedincoursera.model.stackoverflow.QuestionCountSOF;
 import linkedincoursera.model.udacity.UdacityCourse;
 import linkedincoursera.repository.CourseraRepo;
@@ -192,19 +194,29 @@ public class MainController {
         try {
             linkedinService.setApi(access_token);
             LinkedInProfile basicProf = linkedinService.getLinkedInProfile();
-            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
-            List<String> skillSet = linkedinService.getSkillSet();
-            List<Education> educationsList = linkedinService.getEducations();
+
+            // UTILITY TO INSERT USER
+//            linkedinService.insertUser();
+            LinkedinUser user = linkedinService.findUser("Harshank Vengurlekar");
+//            String profilePhotoUrl = linkedinService.getLinkedInProfile().getProfilePictureUrl();
+//            List<String> skillSet = linkedinService.getSkillSet();
+//            List<Education> educationsList = linkedinService.getEducations();
+
+            String profilePhotoUrl = user.getProfilePhotoUrl();
+            List<String> skillSet = user.getSkillSet();
+            List<Educations> educationsList = user.getEducation();
             List<Course> courses = courseraService.fetchCourses();
             List<Categories> categoryList = courseraService.getCategoriesList();
 
-            model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+//            model.addAttribute("userName", basicProf.getFirstName() + " " + basicProf.getLastName());
+            model.addAttribute("userName", user.getUserName());
             model.addAttribute("profilePhotoUrl", profilePhotoUrl);
             model.addAttribute("education", educationsList);
+            model.addAttribute("headline", user.getHeadline());
             model.addAttribute("skills", skillSet);
-            model.addAttribute("summary", linkedinService.getLinkedInProfile().getSummary());
+            model.addAttribute("summary", user.getSummary());
             model.addAttribute("courses", courses);
-            model.addAttribute("positions", linkedinService.getLinkedInProfileFull().getPositions());
+            model.addAttribute("positions", user.getPositions());
         } catch (Exception e) {
             e.printStackTrace();
         }
