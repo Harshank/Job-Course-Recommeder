@@ -38,8 +38,14 @@ public class UdacityService {
     public static List<UdacityCourse> searchCourses(List<UdacityCourse> courses, String queryValue) {
         ArrayList<UdacityCourse> filteredCourses = new ArrayList<UdacityCourse>();
         for(UdacityCourse course : courses) {
-            if(course.getTitle().toLowerCase().contains(queryValue) || course.getSummary().toLowerCase().contains(queryValue) || course.getShort_summary().toLowerCase().contains(queryValue)) {
-                filteredCourses.add(course);
+            String title = course.getTitle().toLowerCase();
+            String short_summary = course.getShort_summary();
+            String summary = course.getTitle().toLowerCase();
+            String skill = queryValue.toLowerCase();
+            if(title.contains(skill) || summary.contains(queryValue) || short_summary.contains(queryValue)) {
+                if (!(title.contains("intro") && title.contains("computer science")) && !(title.contains("intro") && title.contains(skill))) {
+                    filteredCourses.add(course);
+                }
             }
         }
         return filteredCourses;

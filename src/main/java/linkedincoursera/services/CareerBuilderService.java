@@ -22,12 +22,15 @@ public class CareerBuilderService {
     private static final String DEVELOPER_KEY = "WD8G6WQ6KL1RX5Q7V0PY";
     private static final String HOSTSITE = "US";
     private static final String INDUSTRY_CODE = "IND013";
+    private static final String CATEGORY_CODE = "JN004";
     private static final String CAREER_BUILDER_JOB_SEARCH_URL =
-            "http://api.careerbuilder.com/v1/jobsearch?DeveloperKey={0}&HostSite={1}&Keywords={2}&IndustryCodes={3}&Location={4}";
+            "http://api.careerbuilder.com/v1/jobsearch?DeveloperKey={0}&HostSite={1}&Keywords={2}&IndustryCodes={3}&Location={4}&Category={5}";
 
     public List<JobSearchResult> fetchJobs(String skill, String location) throws Exception {
         String encoded_location = location.replace(" ", "%20");
-        String url = MessageFormat.format(CAREER_BUILDER_JOB_SEARCH_URL, DEVELOPER_KEY, HOSTSITE, skill, INDUSTRY_CODE, encoded_location);
+        //String keywords = skill + ",entry";
+        String url = MessageFormat.format(CAREER_BUILDER_JOB_SEARCH_URL, DEVELOPER_KEY, HOSTSITE, skill, INDUSTRY_CODE,
+                encoded_location, CATEGORY_CODE);
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(url);
         HttpResponse response = httpClient.execute(httpGet);
