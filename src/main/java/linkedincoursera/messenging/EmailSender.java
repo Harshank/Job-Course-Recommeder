@@ -33,7 +33,7 @@ public class EmailSender {
     public static void sendEmail(String to, String courseName, String courseHomelink, String courseInstructor) {
         String subject = MessageFormat.format(
                 "Coursera reminder: {0} is starting in 7 days!", courseName);
-        String body = MessageFormat.format("Register at {0}", courseHomelink);
+        String body = MessageFormat.format("Course {0} by {1} is starting after 7 days. You can register at {2}", courseName, courseInstructor, courseHomelink);
 
         try{
             Session session = Session.getDefaultInstance(props,

@@ -172,7 +172,7 @@ public class MainController {
         }
         List<JobSearchResult> resultJobs = new ArrayList<JobSearchResult>(recoJobs);
         if(resultJobs.size() > 10) {
-            resultJobs = resultJobs.subList(0, 20);
+            resultJobs = resultJobs.subList(0, 10);
         }
         return resultJobs;
     }
@@ -220,7 +220,6 @@ public class MainController {
             // UTILITY TO INSERT USER
  //            linkedinService.insertUser(name, emailAdd, profilePhoto, headLine, summary);
                 String profilePhotoUrl = user.getProfilePhotoUrl();
-            System.out.println(user.getProfilePhotoUrl());
                 List<String> skillSet = user.getSkillSet();
                 List<Educations> educationsList = user.getEducation();
                 List<Course> courses = courseraService.fetchCourses();

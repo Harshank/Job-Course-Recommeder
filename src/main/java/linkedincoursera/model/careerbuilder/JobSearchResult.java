@@ -115,10 +115,10 @@ public class JobSearchResult {
         if (obj == this) { return true; }
         if (obj == null || obj.getClass() != this.getClass()) { return false; }
         JobSearchResult guest = (JobSearchResult) obj;
-        return jobTitle.equals(guest.jobTitle);
+        return (jobTitle.equals(guest.jobTitle)||company.equals(guest.company));
     }
     public int hashCode() {
-        return jobTitle.length();
+        return jobTitle.length()+company.length();
     }
     public String toString() {
         return jobTitle;
